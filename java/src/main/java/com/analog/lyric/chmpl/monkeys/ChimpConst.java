@@ -25,7 +25,6 @@ public class ChimpConst extends MonkeyBase
 	public ChimpConst(MonkeyHandler handler) 
 	{
 		super(handler);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -33,7 +32,6 @@ public class ChimpConst extends MonkeyBase
 	{
 		if (parameters.length != 1)
 			throw new ChimpleException("expected one argument");
-		// TODO Auto-generated method stub
 		return parameters[0];
 	}
 

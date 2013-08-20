@@ -43,7 +43,6 @@ public class ChimpRandn extends MonkeyBase
 		
 		//1/sqrt(2*pi*sigma^2)*exp(-(mu-value)^2/(2*sigma^2))
 		//log(sqrt(2*pi*sigma^2) + (mu-value)^2/(2*sigma^2)
-		// TODO Auto-generated method stub
 		return Math.log(Math.sqrt(2*Math.PI*sigma*sigma)) + (mu-value)*(mu-value)/(2*sigma*sigma);
 	}
 

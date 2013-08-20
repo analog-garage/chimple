@@ -19,7 +19,7 @@ function setupChimple()
     %execute Dimpl startup
     if ~exist('testDimple')
         p = pwd;
-        cd(fullfile('..', '..', 'Dimple'));
+        cd(fullfile('..',  'dimple'));
         startup;
         cd(p);
     end

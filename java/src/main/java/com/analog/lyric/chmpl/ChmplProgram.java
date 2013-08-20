@@ -240,31 +240,18 @@ public abstract class ChmplProgram
 		
 		if (newCount == 0)
 		{
-			//System.out.println("here?");
 			accept = true;
 		}
 		else
 		{
-			//int i = Math.abs(_random.nextInt())%20;
-			//for (int j = 0; j < i; j++)
-			//	_random.nextDouble();
 			double rand = _random.nextDouble();
-			//	System.out.print("double: " + Math.log(rand));
 			double lhs = Math.log(rand);
-			//System.out.println(lhs);
 			double rhs = Math.log((double)oldCount/newCount);
-			//System.out.println("rhs: " + rhs);
-			//double rhs = 0;
 			rhs -= hastings;
 			rhs -= newll;
 			rhs += _savedLoglikelihood;
-			//System.out.println(rhs);
 			accept =  lhs < rhs;
 			
-			//if (accept)
-			//	System.out.println(result);
-			
-			//System.out.print(" oldCount: " + oldCount + " newCount: " + newCount + " accept: " + accept + " " );
 		}
 		
 		if (accept)
@@ -277,12 +264,7 @@ public abstract class ChmplProgram
 		{
 			_monkeyHandler.reject();
 			_monkeyHandler.setActiveMonkeyNum(oldCount);
-			//_savedResult = result;
 		}
-		
-		//System.out.println("result: " + _savedResult);
-		
-		//return result;
 	}
 	
 

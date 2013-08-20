@@ -28,7 +28,6 @@ public class ChimpFlip extends MonkeyBase
 	public ChimpFlip(MonkeyHandler handler) 
 	{
 		super(handler);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
