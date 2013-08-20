@@ -1,0 +1,67 @@
+package com.analog.lyric.chmpl.monkeys;
+
+import com.analog.lyric.chmpl.MonkeyHandler;
+import org.apache.commons.math.special.Gamma;
+
+public class ChimpBeta extends MonkeyBase 
+{
+
+	public ChimpBeta(MonkeyHandler handler) 
+	{
+		super(handler);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public Object generate(Object[] parameters)  
+	{
+		
+		double alpha = (Double)parameters[0];
+		double beta = (Double)parameters[1];
+		
+		double [] tmp = getRandom().nextDirichlet(new double [] {alpha,beta});
+		// TODO Auto-generated method stub
+		return tmp[0];
+	}
+
+	@Override
+	public double calculateLikelihood(Object result, Object[] parameters) 
+	{
+		/*
+		 *     alphas=[alpha beta];
+    value=[value 1-value];
+    %fast computation without normalization
+    %result=-sum((alphas-1).*log(value));
+    
+    %exact computation, but the constant term should hopefully be useless
+    
+    result=sum(gammaln(alphas))-gammaln(sum(alphas))-sum((alphas-1).*log(value));
+
+		 */
+		double value = (Double)result;
+		double alpha = (Double)parameters[0];
+		double beta = (Double)parameters[1];
+
+		
+		//double alphaBetaSum = alpha+beta;
+
+		double retval = Gamma.logGamma(alpha);
+		retval +=  Gamma.logGamma(beta);
+		retval -= Gamma.logGamma(alpha+beta);
+		retval -= (alpha-1)*Math.log(value);
+		retval -= (beta-1)*Math.log(1-value);
+		
+
+		return retval;
+	}
+
+	@Override
+	public RegeneratorPair regenerate(Object oldVal, Object[] parameters)  
+	{
+		double sigma = (Double)parameters[2];
+		double hastings = 0;
+		double value = Math.min(Math.max((Double)oldVal+sigma*getRandom().nextGaussian(),0), 1);
+		return new RegeneratorPair(value,hastings);
+	}
+
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" output="build/classes/test" path="src/test/java"/>
+	<classpathentry kind="src" path="src/test/resources"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="build/external-libs/jcommon-1.0.17.jar"/>
+	<classpathentry exported="true" kind="lib" path="build/external-libs/commons-math-2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="build/external-libs/jfreechart-1.0.14.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dimple"/>
+	<classpathentry kind="lib" path="build/external-libs/jcip-annotations-1.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://jcip.net/annotations/doc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="build/classes/main"/>
+</classpath>

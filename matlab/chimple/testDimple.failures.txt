@@ -1,0 +1,15 @@
+testDimple had errors. 202 of 203 tests passed, 1 failed
+
+===== Test Case Failure =====
+Location: /Users/shershey/git/chimple/matlab/tests/algoChimple/testBeta.m
+Name:     testBeta
+
+/Users/shershey/git/chimple/matlab/chimple/monkeys/elementary_monkeys/chimpbeta.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/chimple/monkeys/elementary_monkeys/chimpbeta.m',11)">line 11</a>
+/Users/shershey/git/chimple/matlab/tests/algoChimple/testBeta.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/tests/algoChimple/testBeta.m',12)">line 12</a>
+
+Java exception occurred: 
+com.analog.lyric.chmpl.ChimpleException: Variable (foo) already created
+	at com.analog.lyric.chmpl.monkeys.MonkeyBase.runMonkey(MonkeyBase.java:88)
+	at com.analog.lyric.chmpl.ChmplProgram.chimpBeta(ChmplProgram.java:133)
+	at com.analog.lyric.chmpl.ChmplProgram.chimpBeta(ChmplProgram.java:128)
+
