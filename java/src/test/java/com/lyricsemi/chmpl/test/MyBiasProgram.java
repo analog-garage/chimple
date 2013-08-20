@@ -16,13 +16,13 @@
 
 package com.lyricsemi.chmpl.test;
 
-import com.analog.lyric.chmpl.ChmplProgram;
+import com.analog.lyric.chmpl.ChimpleProgram;
 
 /*
  * This is an exmaple of a chimple program.  The BiasTest
  * actually instantiates this and calls chimplify.
  */
-public class MyBiasProgram extends ChmplProgram 
+public class MyBiasProgram extends ChimpleProgram 
 {
 
 	@Override

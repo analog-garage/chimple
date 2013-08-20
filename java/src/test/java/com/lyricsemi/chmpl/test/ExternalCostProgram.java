@@ -16,9 +16,9 @@
 
 package com.lyricsemi.chmpl.test;
 
-import com.analog.lyric.chmpl.ChmplProgram;
+import com.analog.lyric.chmpl.ChimpleProgram;
 
-public class ExternalCostProgram extends ChmplProgram 
+public class ExternalCostProgram extends ChimpleProgram 
 {
 
 	@Override

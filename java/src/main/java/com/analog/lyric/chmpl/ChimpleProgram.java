@@ -37,7 +37,7 @@ import com.analog.lyric.math.RandomPlus;
  * to run Chmpl.  ChmplProgram provides a set of Elementary Random Monkeys that can
  * be used in the user's program.
  */
-public abstract class ChmplProgram 
+public abstract class ChimpleProgram 
 {
 
 	private MonkeyHandler _monkeyHandler;
@@ -53,7 +53,7 @@ public abstract class ChmplProgram
 	private ChimpBeta _beta;
 	private ChimpDirichlet _dirichlet;
 	
-	public ChmplProgram()
+	public ChimpleProgram()
 	{
 		_random = new RandomPlus();
 		_monkeyHandler = new MonkeyHandler(_random);

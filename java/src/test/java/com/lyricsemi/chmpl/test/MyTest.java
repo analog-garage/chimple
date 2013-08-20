@@ -19,7 +19,7 @@ package com.lyricsemi.chmpl.test;
 
 import org.junit.Test;
 
-import com.analog.lyric.chmpl.ChmplProgram.ChmplResults;
+import com.analog.lyric.chmpl.ChimpleProgram.ChmplResults;
 
 import static org.junit.Assert.*;
 

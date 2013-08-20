@@ -21,7 +21,7 @@ package com.analog.lyric.chmpl;
  * The MatlabProxy class is used by the MATLAB Chmpl.  It is a thin wrapper around
  * ChmplProgram, simply making it a concrete class.
  */
-public class MatlabProxy extends ChmplProgram 
+public class MatlabProxy extends ChimpleProgram 
 {
 	@Override
 	public Object run(Object ... args)  
