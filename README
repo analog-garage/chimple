@@ -1,0 +1,60 @@
+
+Initial Release
+=====================
+This is Chimple's first release.  We have not written a significant number of tests yet.
+We will be investing more effort in this tool in the near future.
+
+Chimple Documentation
+=====================
+The doc directory contains some basic Chimple documentation.
+
+
+Building Chimple from Source
+===============================
+1) Checkout dimple and chimple in the same parent directory
+https://github.com/AnalogDevicesLyricLabs/dimple
+https://github.com/AnalogDevicesLyricLabs/chimple
+
+2) Make sure gradle is installed:
+http://www.gradle.org/
+
+3) change to chimple/java
+
+4) Execute gradle
+shell$ gradle
+
+Running Chimple from MATLAB
+===========================
+0) Build Chimple
+1) Start MATLAB
+2) change to the chimple directory
+3) execute the startup.m script
+4) run testChimple to verify everything is set up correctly.
+
+
+Running Chimple from Java
+========================
+0) Build Chimple
+1) Add chimple/lib/chimple.jar to javaclasspath.
+2) Add all jar files in dimple/solvers/lib to javaclasspath
+3) You can now use chimple from your java program.
+
+Building a Chimple Kit
+======================
+1) Make sure dimple and chimple are checked out in the same parent directory.
+
+2) Change to the chimple/build directory
+
+3) Execute the following command:
+shell$ python build.py
+
+4) chimple_<version num>.jar should now be in the build directory.
+
+Running Chimple from a kit
+==========================
+1) dimple and chimple must exist in the same parent directory.
+2) All directions about using chimple from source now apply
+
+
+
+
