@@ -20,6 +20,7 @@ import com.analog.lyric.chmpl.ChimpleException;
 import com.analog.lyric.chmpl.MonkeyHandler;
 import com.analog.lyric.chmpl.MonkeyOutput;
 import com.analog.lyric.math.RandomPlus;
+import java.util.Arrays;
 
 /*
  * This is the base class for all elementary random monkeys.  The runMoneky method
@@ -68,19 +69,7 @@ public abstract class MonkeyBase
 	
 	private boolean paramatersAreSame(Object [] params1, Object [] params2)
 	{
-		
-		if (params1.length != params2.length)
-			return false;
-		
-		for (int i = 0; i < params1.length; i++)
-		{
-			if (!params1[i].equals(params2[i]))
-			{
-				return false;
-			}
-		}
-		
-		return true;
+		return Arrays.deepEquals(params1, params2);
 	}
 	
 	public Object runMonkey(String name, Object ... parameters) 
