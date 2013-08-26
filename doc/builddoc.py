@@ -59,7 +59,7 @@ if __name__ == "__main__":
     parser.add_option("-m","--matlab_user_doc",action="store_true",default=False,dest="matlab_user_doc")
     #parser.add_option("-d","--devel_doc",action="store_true",default=False,dest="devel_doc")
     parser.add_option("-f","--user_doc_filename",dest="user_doc_filename",default="ChimpleUserDocumentation")
-    parser.add_option("-F","--user_doc_dir",dest="user_doc_dir",default=".")
+    parser.add_option("-F","--user_doc_dir",dest="user_doc_dir",default="ChimpleUserDocumentation")
     #parser.add_option("-r","--devel_doc_filename",dest="devel_doc_filename",default="DimpleDeveloperDocumentation")
     parser.add_option("-R","--devel_doc_dir",dest="devel_doc_dir",default="DimpleDeveloperDocumentation")
     parser.add_option("-c","--clean",dest="clean",default=False,action="store_true")
