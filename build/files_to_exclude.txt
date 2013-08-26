@@ -1,7 +1,5 @@
 build
-disclosure
 java
-doc
-python
-theory
-tools
+doc/builddoc.py
+
+
