@@ -54,7 +54,7 @@
 \else
 	\ifdefined\formatlab
 		\matlabtrue
-	\else		
+	\else
                 %modify this flag to matlabtrue or javatrue when editing with TexShop
                 %When building from the commandline this will be ignored.
 %		\javatrue
@@ -114,14 +114,25 @@ In the typical situation, we wish to condition on the output (i.e. we observe th
 In Chimple, each new variable has to be explicitly and unambiguously defined, using only variables which have previously been defined.  (Properly defined recursive definitions are valid, assuming they terminate.)  The crucial differences between a generative model for data and a regular program are as follows:
 
 \subsection{Some instructions or variable definitions are allowed to be stochastic}
-In order to do this, the Chimple language has a finite library of atomic random functions which can be combined to construct more complex random functions. These functions are called \textit{monkeys} \footnote{A parallelized MCMC approach to producing the works of Shakespeare might involve a thousand monkeys on a thousand typewriters}, or ERMs (for \textit{elementary random monkeys}).
-An example of a monkey is \textbf{chimpflip}. In the absence of an argument, chimpflip returns the outcome of a random coin flip (i.e. 0 or 1 with probability 1/2 each). With a weight argument w, chimpflip returns the outcome of a biased random coin (1 with probability w, 0 with probability 1-w).
-A second example of an monkey is \textbf{chimprand}, which generates a random number uniformly distributed between 0 and 1.
-Here are a few examples of building generative models of data.
-In this first example, we simply create a randomly biased coin, and flip it 20 times.
+
+In order to do this, the Chimple language has a finite library of atomic random functions which can be combined to construct more complex random functions. These functions are called \textit{monkeys} \footnote{A parallelized MCMC approach to producing the works of Shakespeare might involve a thousand monkeys on a thousand typewriters}, or ERMs (for \textit{elementary random monkeys}).
+
+An example of a monkey is \textbf{chimpflip}. In the absence of an argument, chimpflip returns the outcome of a random coin flip (i.e. 0 or 1 with probability 1/2 each). With a weight argument w, chimpflip returns the outcome of a biased random coin (1 with probability w, 0 with probability 1-w).
+
+A second example of an monkey is \textbf{chimprand}, which generates a random number uniformly distributed between 0 and 1.
+
+Here are a few examples of building generative models of data.
+
+In this first example, we simply create a randomly biased coin, and flip it 20 times.
 
 \begin{lstlisting}
-% Generates a random weight for a coinweight=chimprand('weight');for i=1:20  % given an input weight, creates a coin which flips heads with  % probability equal to weight  X(i)=chimpflip(weight,sprintf('X',i));end
+% Generates a random weight for a coin
+weight=chimprand('weight');
+for i=1:20
+  % given an input weight, creates a coin which flips heads with
+  % probability equal to weight
+  X(i)=chimpflip(weight,sprintf('X',i));
+end
 \end{lstlisting}
 
 In the second example, we generate two binary random variables ? lung\_cancer and cold ? with probabilities 0.01 and 0.2 respectively, and define cough as a binary variable equal to 1 if either lung\_cancer or cold is 1.
@@ -130,7 +141,13 @@ In the second example, we generate two binary random variables ? lung\_cancer an
 \subsection{At termination, the user specifies which variables or data he wants to sample}
 
 \begin{lstlisting}
-%defines the probability of lung cancer to be 1%lung_cancer=chimpflip('LG',0.01);%defines the probability of cold to be 20%cold=chimpflip('cold',0.2);%cough is present if cold or lung cancer is presentcough=or(cold, lung_cancer);A
+%defines the probability of lung cancer to be 1%
+lung_cancer=chimpflip('LG',0.01);
+%defines the probability of cold to be 20%
+cold=chimpflip('cold',0.2);
+%cough is present if cold or lung cancer is present
+cough=or(cold, lung_cancer);
+A
 \end{lstlisting}
 
 generative model is usually run several times. Each time the program completes, Chimple records which variables are to be kept and displayed to the users (though technically, at the end of each run, a sample of all variables which were created is in memory, typically only some are of interest to the users). These are the latent variables of the system.
@@ -138,25 +155,42 @@ generative model is usually run several times. Each time the program completes, 
 \subsection{The user can specify a condition for a sample to be accepted}
 
 If run forward, a generative model for data would simply do that - generate data. The computational complexity would be exactly that of running the program. There would also be no major hurdles in probabilistic programming - simply explicitly execute each instruction until termination, and repeat as many times as specified.
-In practice, however, data is not generated by a program, but given to us - measured from sensors, extracted from documents. Thus, the user needs to condition the output of the program on the observed data. This, in turn, effects the conditional distribution of the monkeys in the probabilistic program.
-Conditioning on the output of the program retroactively makes most variables in the generative model implicitly defined, which in turns appears to make a sampling algorithm necessary.
-Let us continue the medical diagnosis example:
+
+In practice, however, data is not generated by a program, but given to us - measured from sensors, extracted from documents. Thus, the user needs to condition the output of the program on the observed data. This, in turn, effects the conditional distribution of the monkeys in the probabilistic program.
+
+Conditioning on the output of the program retroactively makes most variables in the generative model implicitly defined, which in turns appears to make a sampling algorithm necessary.
+
+Let us continue the medical diagnosis example:
 
 \begin{lstlisting}
-%defines the probability of lung cancer to be 1%lung_cancer=chimpflip('LG',0.01);%defines the probability of cold cancer to be 20%cold=chimpflip('cold',0.2);%cough is present if cold or lung cancer is presentcough=or(cold, lung_cancer);%we observe that the patient is coughingaddHardChimpConstraint(cough,1);
+%defines the probability of lung cancer to be 1%
+lung_cancer=chimpflip('LG',0.01);
+%defines the probability of cold cancer to be 20%
+cold=chimpflip('cold',0.2);
+%cough is present if cold or lung cancer is present
+cough=or(cold, lung_cancer);
+%we observe that the patient is coughing
+addHardChimpConstraint(cough,1);
 \end{lstlisting}
 
 The above program represents the following model:
 
 We assume that lung-cancer occurs in 1\% of patients screened, and cold in 20\% of them (independently). Presence of either disease will result in a cough in the patient.
-Assume a patient arrives with a cough. We want to know if he has lung cancer. (The correct answer is that 4.8\% of the samples should return true.).
+
+Assume a patient arrives with a cough. We want to know if he has lung cancer. (The correct answer is that 4.8\% of the samples should return true.).
 
 We can therefore abstract the generative model process as follows:
-\begin{enumerate}\item Generate hidden or latent random variables. Some of the latent variables are structural (i.e. they are not of direct interest to the user), while others are regular. The relationship between all the latent random variables can be arbitrarily complex.\item Specify a model for generating the observed random variables Y.\item Provide the program with the true values Y0 of observed variables Y.\item Ask for samples of the regular latent variables X which best explain the observations Y. The metric of how well the data is explained is the score function P(X) P(Y|X).
+\begin{enumerate}
+\item Generate hidden or latent random variables. Some of the latent variables are structural (i.e. they are not of direct interest to the user), while others are regular. The relationship between all the latent random variables can be arbitrarily complex.
+\item Specify a model for generating the observed random variables Y.
+\item Provide the program with the true values Y0 of observed variables Y.
+\item Ask for samples of the regular latent variables X which best explain the observations Y. The metric of how well the data is explained is the score function P(X) P(Y|X).
 \end{enumerate}
 
-In summary, stochastic programming operates as follows:\begin{enumerate}
-\item Write a program (with random instructions) which explains how the data was generated.\item Given actual data, explain what was the most likely ?path? through the program which accounts for the observed data.
+In summary, stochastic programming operates as follows:
+\begin{enumerate}
+\item Write a program (with random instructions) which explains how the data was generated.
+\item Given actual data, explain what was the most likely ?path? through the program which accounts for the observed data.
 \end{enumerate}
 
 Mathematically, the desired probability distribution on the latent variables X is given by:
@@ -170,25 +204,49 @@ This composite term is called `score?. The first part, P(X), will also be called
 The simplest technique for finding samples X corresponding to observations $Y_0$ is rejection sampling:
 
 \begin{lstlisting}
-** Rejection samplingSet Y=nullwhile Y~= Y_0    generate (X,Y) according to the forward generative modelendoutput X
+** Rejection sampling
+Set Y=null
+while Y~= Y_0
+    generate (X,Y) according to the forward generative model
+end
+output X
 \end{lstlisting}
 
 Unfortunately, rejection sampling is an inefficient scheme which may take a large (and in many cases, infinite) amount of time before finding a sample.
-Chimple's inference engine runs a modified version of the Metropolis-Hastings Markov chain Monte Carlo algorithm. MH-MCMC requires a proposal distribution $Q(X' | X)$, i.e. a sampling mechanism (with known probability transition), which, given a sample X, creates a new sample $X'$ according to some arbitrary rule. The heart of the algorithm is illustrated by the following pseudocode:
+
+Chimple's inference engine runs a modified version of the Metropolis-Hastings Markov chain Monte Carlo algorithm. MH-MCMC requires a proposal distribution $Q(X' | X)$, i.e. a sampling mechanism (with known probability transition), which, given a sample X, creates a new sample $X'$ according to some arbitrary rule. The heart of the algorithm is illustrated by the following pseudocode:
 
 Markov Chain Monte Carlo
-\begin{enumerate}\item Start with a randomly generated X.\item For t=1...T Do:
-\begin{enumerate}\item     generate $X'$ according to $Q(X'|X)$\item     compute $ \alpha = min(1,\frac{P(X',Y_0)Q(X'|X)}{P(X,Y_0)Q(X|X')}) $
+\begin{enumerate}
+\item Start with a randomly generated X.
+\item For t=1...T Do:
+\begin{enumerate}
+\item     generate $X'$ according to $Q(X'|X)$
+\item     compute $ \alpha = min(1,\frac{P(X',Y_0)Q(X'|X)}{P(X,Y_0)Q(X|X')}) $
 \item     With probability alpha, accept the change (i.e. set $X=X'$),
-\end{enumerate}\item otherwise discard X'\item end output X
+\end{enumerate}
+\item otherwise discard X'
+\item end output X
 \end{enumerate}
 
 MH-MCMC asymptotically converges to a sample of the true distribution - however, there remains the question of the proposal distribution. Note that in our case, a sample X corresponds to the entire execution path of a program ? i.e. the value taken by all the monkeys encountered in that path.
-In general, X contains a large number of variables and one does not want to resample the entire vector X, since this would lead to a slow rate of convergence. To alleviate this problem, a good probabilistic programming language should only resample part of the vector X. However, partial resampling could lead to problems, as the resulting X' may not be a consistent sample at all (i.e. a sample that could have been generated by the model).
-Consider the following program:
+
+In general, X contains a large number of variables and one does not want to resample the entire vector X, since this would lead to a slow rate of convergence. To alleviate this problem, a good probabilistic programming language should only resample part of the vector X. However, partial resampling could lead to problems, as the resulting X' may not be a consistent sample at all (i.e. a sample that could have been generated by the model).
+
+Consider the following program:
 
 \begin{lstlisting}
-A=chimpflip(?A?);B1=chimpflip(?B1?);if A     B2=chimpflip(?B2?);     B3=chimpflip(?B3?);     C=and(and(B1,B2),B3);else     B4=chimpflip(?B4?);     C=not(B4);endD= chimpflip(?D?);
+A=chimpflip(?A?);
+B1=chimpflip(?B1?);
+if A
+     B2=chimpflip(?B2?);
+     B3=chimpflip(?B3?);
+     C=and(and(B1,B2),B3);
+else
+     B4=chimpflip(?B4?);
+     C=not(B4);
+end
+D= chimpflip(?D?);
 \end{lstlisting}
 
 Suppose that we observed that C is false, and let us start an MCMC sampler with sample path X=(A=true, B1=true, b2=true, B3=false, C=false,D=true). Following the idea of a partial resample, let us suppose we create a new sample path X? by only resampling A, making it now false, leading to a proposed new state X?=(A=false, B1=true, B2=true, B3=false, C=false,D=true). Let us note this is in fact not an admissible sample - even though C is still false. Indeed, if A is false, B2 and B3 should not exist, but B4 should.
@@ -199,7 +257,10 @@ Let us consider the above example again, and start with trace X=(A=true, B1=true
 
 \begin{itemize}
 \item Suppose A is resampled to false. B1 is not resampled because it does not depend on A (even though B1 is created after A). B2 and B3 are discarded since they corresponded to an unused branch of computation. B4 is sampled (say to value true), and C is recomputed to false (incidentally equal to its previous value). D is kept to the same value since it is not affected by A.
-Suppose B3 is resampled to true. A, B1 and B2 keep their previous values, and C is recomputed to true. D is kept to the same value since it is not affected by B3.\item Similarly, if B2 is resampled to false, all other variables keep their previous values and the computation terminates. D is kept to the same value since it is not affected by B2.\item If D is chosen, it is resampled to false and all other variables keep their current values.\item Note that C is always indirectly recomputed - it is not a monkey (it is however random, as a function of other random variables), so it is never chosen directly by the algorithm to be resampled.
+Suppose B3 is resampled to true. A, B1 and B2 keep their previous values, and C is recomputed to true. D is kept to the same value since it is not affected by B3.
+\item Similarly, if B2 is resampled to false, all other variables keep their previous values and the computation terminates. D is kept to the same value since it is not affected by B2.
+\item If D is chosen, it is resampled to false and all other variables keep their current values.
+\item Note that C is always indirectly recomputed - it is not a monkey (it is however random, as a function of other random variables), so it is never chosen directly by the algorithm to be resampled.
 \end{itemize}
 
 The details of how Chimple keeps track of which variables need to be recomputed, and how to compute the acceptance-rejection ratio for this particular method of proposal, are beyond the scope of this report. Let us finish by mentioning that a variety of other search methods can also be used to find samples, for instance A*, or sequential sampling.
@@ -209,35 +270,53 @@ The details of how Chimple keeps track of which variables need to be recomputed,
 This tutorial describes how to code using $MATLAB^{TM}$ Chimple. We provide four tutorials. The first tutorial revisits the code for the medical problem and for flipping random coins.
 
 \subsection{DefiningElementaryRandomMonkeysandwritingtheStochastic Program}
-A Chimple program consists of two parts: a stochastic program, which generates the observed data, and a meta-program, which governs the MCMC sampling of the stochastic program.
+
+A Chimple program consists of two parts: a stochastic program, which generates the observed data, and a meta-program, which governs the MCMC sampling of the stochastic program.
 
 The conditioning expression, or data cost, can be included in both the stochastic program, and the meta-program.
 
 \subsubsection{Medical example: chimpflip, naming monkeys, conditioning statements}
-Recall the following stochastic program:
+
+Recall the following stochastic program:
 
 \begin{lstlisting}
-function [lung_cancer]=medical_BN()%defines the probability of lung cancer to be 1%lung_cancer=chimpflip('LG',0.01);%defines the probability of cold cancer to be 20%cold=chimpflip('cold',0.2);%cough is present if cold or lung cancer is presentcough=or(cold, lung_cancer);%we observe that the patient is coughingaddHardChimpConstraint(cough,1);
+function [lung_cancer]=medical_BN()
+%defines the probability of lung cancer to be 1%
+lung_cancer=chimpflip('LG',0.01);
+%defines the probability of cold cancer to be 20%
+cold=chimpflip('cold',0.2);
+%cough is present if cold or lung cancer is present
+cough=or(cold, lung_cancer);
+%we observe that the patient is coughing
+addHardChimpConstraint(cough,1);
 \end{lstlisting}
 
 The program starts by defining the "lung\_cancer" monkey as a binomial (or "flip") variable, equal to 1 with probability 1\%. Note that the monkey takes two parameters: the first parameter of any monkey is its name. The name of an monkey is simply a unique `internal? identifier for each monkey. Since stochastic program (even complex, recursive ones) correspond to directed probabilistic models, the requirement that each monkey can be given a unique name is always possible. In that sense, each monkey may have two names. The first is the internal name of the monkey, which is always the first argument of the monkey call (in this case, "LG"). The second, which is optional, is the name of the value the monkey actually takes, in this case, "lung\_cancer". A future version of Chimple will remove the need from the user to specify a unique internal name - as it will be derived automatically from the program at execution time. While using the same name for the internal and the Matlab name of the variable is good practice, Chimple does not require both names to be identical (as evidenced by the lung\_cancer variable).
-In short, an monkey call will always take the following form
+
+In short, an monkey call will always take the following form
 
 \begin{lstlisting}
 Matlab_name=erm_name('internal_name',parameters);
 \end{lstlisting}
 
 where Matlab\_name is optional (in case the monkey is used directly in a computation), and parameters is optional as well (depending on the monkey).
-In the case of chimpflip, there is only parameter, the weight of the "coin". If not specified, it defaults to 0.5.
-The output of a stochastic programs consists of the variables which will be kept (in other words, the sampled variables). While all variables could always be included as part of a global "trace" output for a stochastic program, if the user only cares about the values taken by certain variables, he can safely exclude other "structural" variables. In this case, the user only cares about the occurrence of lung cancer or not.
-In order to run our stochastic program, we always need to write a very simple "meta-program", which specifies the sampling parameters (and potential conditioning statements).
+
+In the case of chimpflip, there is only parameter, the weight of the "coin". If not specified, it defaults to 0.5.
+
+The output of a stochastic programs consists of the variables which will be kept (in other words, the sampled variables). While all variables could always be included as part of a global "trace" output for a stochastic program, if the user only cares about the values taken by certain variables, he can safely exclude other "structural" variables. In this case, the user only cares about the occurrence of lung cancer or not.
+
+In order to run our stochastic program, we always need to write a very simple "meta-program", which specifies the sampling parameters (and potential conditioning statements).
 
 \begin{lstlisting}
-burnin = 0;samples = 300;spacing = 10;results = chimplify(@medical_BN,burnin,samples,spacing);
+burnin = 0;
+samples = 300;
+spacing = 10;
+results = chimplify(@medical_BN,burnin,samples,spacing);
 \end{lstlisting}
 
 Burnin specifies how many samples are used for the MCMC "burn-in" (i.e. how many MCMC iterations are run without keeping results). Samples specifies the number of required samples. Spacing specifies how many iterations are run between each conserved sample.
-The last command, "chimplify", runs the stochastic program. It has the following syntax:
+
+The last command, "chimplify", runs the stochastic program. It has the following syntax:
 
 \begin{lstlisting}
 results=chimplify(@program_name,burnin,samples,spacing,arguments,condition,carg)
@@ -251,7 +330,9 @@ Conditioning statements - or score functions, as they are generally defined in C
 
 \begin{itemize}
 \item The user is allowed to either specify a cost function directly inside the stochastic program. This is done with the command ?addChimpCost?. addChimpCost is called with a single real argument. At the end of the execution of a sample stochastic program, all values which were given to arguments to addChimpCost are added to the overall trace likelihood. We also provide two special cases of addChimpCost:
-\begin{itemize}\item The first,addHardChimpConstraint, takes two arguments and enforces hard equality of both arguments.\item The second,addSoftChimpConstraint, takes two arguments and an optional third temperature argument, and enforces soft equality of both arguments
+\begin{itemize}
+\item The first,addHardChimpConstraint, takes two arguments and enforces hard equality of both arguments.
+\item The second,addSoftChimpConstraint, takes two arguments and an optional third temperature argument, and enforces soft equality of both arguments
 \end{itemize}
 
 \item In many cases, declaring a constraint inside the stochastic program can be seen as undesirable from a UI point of view. Chimple allows the user to declare a cost function as part of the arguments of chimplify. In Chimple, a cost function should always be declared to be a function of the outputs of the stochastic program (even if those outputs are not used). A cost function should not declare any additional monkeys and should consist only of : computation of the desired score function (regular Matlab code), and sending those negative-log score functions to Chimple. This is done using the regular addChimpCost function. However, recall that in the scope of the cost function, only the values of the variables output as a result of the stochastic program will be accessible. The names of those output variables won't be accessible, and neither the name nor the value of non-output variables will be accessible. We therefore provide a method for accessing a variable (monkey or not) outside of the scope of the stochastic program. To access any value outside of the stochastic program, we simply use the 'chimpConst' method. chimpConst requires syntax similar to an monkey:
