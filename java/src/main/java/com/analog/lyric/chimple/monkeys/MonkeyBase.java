@@ -132,20 +132,25 @@ public abstract class MonkeyBase
 					
 					//Check to see if we've already encountered these parameters
 					if (paramatersAreSame(parameters,monkey.getParameters()))
-					{
-						//TODO: are we supposed to regenerate?
-						
+					{						
 						//If we have, return the existing value
 		                Object result = monkey.getValue();
 		                
-		                //Retrieve the likelihood
+		                //TODO: Why do we have to do this, why would the likelihood have changed?
+		                //     The parameters and the result are the same.
 		                double likelihood = calculateLogLikelihood(result,parameters);
-		                monkey.setLikelihood(likelihood,runNumber);
+		                monkey.setLogLikelihood(likelihood,runNumber);
 		                return result;
 					}
 					else
 					{
+						//In the case where the parameters are not the same, we're going to
+						//regenerate.  This is "weak" stochastic re-use.  
+						
+						//regenerate.
 						Object result = generate(parameters);
+						
+						//calculate the likelihood and store the value and likelihood.
 						double likelihood = calculateLogLikelihood(result, parameters);
 		                monkey.setValueAndLogLikelihood(result,likelihood,runNumber);
 		                monkey.setParameters(parameters);
@@ -156,7 +161,12 @@ public abstract class MonkeyBase
 			}
 			else
 			{
+				//This is the first time this monkey name has been encountered.
+				
+				//Generate the variable
 				Object result = generate(parameters);
+				
+				//calculate the likelihood and add the monkey to the list of monkeys.
 				double likelihood = calculateLogLikelihood(result,parameters);
 				_monkeyHandler.addMonkey(name,result,likelihood,runNumber,parameters);
 				return result;

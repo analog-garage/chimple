@@ -106,7 +106,7 @@ public class MonkeyOutput
 		return _parameters;
 	}
 
-	public void setLikelihood(double likelihood,int runNumber)
+	public void setLogLikelihood(double likelihood,int runNumber)
 	{
 		_loglikelihood = likelihood;
 		_lastTouched = runNumber;
