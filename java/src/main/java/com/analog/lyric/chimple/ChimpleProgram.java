@@ -14,27 +14,27 @@
 *   limitations under the License.
 ********************************************************************************/
 
-package com.analog.lyric.chmpl;
+package com.analog.lyric.chimple;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.analog.lyric.chmpl.monkeys.ChimpBeta;
-import com.analog.lyric.chmpl.monkeys.ChimpConst;
-import com.analog.lyric.chmpl.monkeys.ChimpDirichlet;
-import com.analog.lyric.chmpl.monkeys.ChimpDiscrete;
-import com.analog.lyric.chmpl.monkeys.ChimpFlip;
-import com.analog.lyric.chmpl.monkeys.ChimpPerm;
-import com.analog.lyric.chmpl.monkeys.ChimpRand;
-import com.analog.lyric.chmpl.monkeys.ChimpRandn;
+import com.analog.lyric.chimple.monkeys.ChimpBeta;
+import com.analog.lyric.chimple.monkeys.ChimpConst;
+import com.analog.lyric.chimple.monkeys.ChimpDirichlet;
+import com.analog.lyric.chimple.monkeys.ChimpDiscrete;
+import com.analog.lyric.chimple.monkeys.ChimpFlip;
+import com.analog.lyric.chimple.monkeys.ChimpPerm;
+import com.analog.lyric.chimple.monkeys.ChimpRand;
+import com.analog.lyric.chimple.monkeys.ChimpRandn;
 import com.analog.lyric.math.RandomPlus;
 
 /*
- * This is the main Chmpl class.
+ * This is the main Chimple class.
  * 
  * This class follows the template pattern.  Users can create a new class
  * that derives from this one, implement the run method, and then call chimplify
- * to run Chmpl.  ChmplProgram provides a set of Elementary Random Monkeys that can
+ * to run Chimple.  ChimpleProgram provides a set of Elementary Random Monkeys that can
  * be used in the user's program.
  */
 public abstract class ChimpleProgram 
@@ -238,20 +238,26 @@ public abstract class ChimpleProgram
 		
 		boolean accept;
 		
+		double lhs = 0;
+		double rhs = 0;
+		
 		if (newCount == 0)
 		{
 			accept = true;
+			lhs = -1;
+			rhs = -1;
 		}
 		else
 		{
 			double rand = _random.nextDouble();
-			double lhs = Math.log(rand);
-			double rhs = Math.log((double)oldCount/newCount);
+			lhs = Math.log(rand);
+			rhs = Math.log((double)oldCount/newCount);
 			rhs -= hastings;
 			rhs -= newll;
 			rhs += _savedLoglikelihood;
 			accept =  lhs < rhs;
 			
+
 		}
 		
 		if (accept)
@@ -268,25 +274,25 @@ public abstract class ChimpleProgram
 	}
 	
 
-	public ChmplResults chimplify(int burnin, int numSamples, int spacing) 
+	public ChimpleResults chimplify(int burnin, int numSamples, int spacing) 
 	{
 		return chimplify(burnin,numSamples,spacing, new Object[]{});
 	}
 
-	public ChmplResults chimplify(int burnin, int numSamples, int spacing, Object [] programArgs) 
+	public ChimpleResults chimplify(int burnin, int numSamples, int spacing, Object [] programArgs) 
 	{
 		return chimplify(burnin,numSamples,spacing,programArgs,null);
 	}
 
 	
-	public ChmplResults chimplify(int burnin, int numSamples, int spacing, Object [] programArgs,CostBase costFunction) 
+	public ChimpleResults chimplify(int burnin, int numSamples, int spacing, Object [] programArgs,CostBase costFunction) 
 	{
 
 		if (costFunction != null)
 			costFunction.setHandler(_monkeyHandler);
 		
 		startChimplify();
-		ChmplResults results = new ChmplResults(numSamples);
+		ChimpleResults results = new ChimpleResults(numSamples);
 
 		try
 		{
@@ -303,7 +309,7 @@ public abstract class ChimpleProgram
 				results.getResults()[i] = _savedResult;
 				
 				//store likelihood
-				results.getLikelihoods()[i] = _savedLoglikelihood;
+				results.getLogLikelihoods()[i] = _savedLoglikelihood;
 				
 				if (i != (numSamples-1))
 				{
@@ -336,12 +342,12 @@ public abstract class ChimpleProgram
 		
 	}
 	
-	public class ChmplResults
+	public class ChimpleResults
 	{
 		private Object [] _results;
 		private double [] _likelihoods;
 		
-		public ChmplResults(int numSamples)
+		public ChimpleResults(int numSamples)
 		{
 			_results = new Object[numSamples];
 			_likelihoods = new double[numSamples];
@@ -352,7 +358,7 @@ public abstract class ChimpleProgram
 			return _results;
 		}
 		
-		public double [] getLikelihoods()
+		public double [] getLogLikelihoods()
 		{
 			return _likelihoods;
 		}

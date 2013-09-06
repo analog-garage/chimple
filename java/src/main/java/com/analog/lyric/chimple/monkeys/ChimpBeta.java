@@ -14,9 +14,10 @@
 *   limitations under the License.
 ********************************************************************************/
 
-package com.analog.lyric.chmpl.monkeys;
+package com.analog.lyric.chimple.monkeys;
 
-import com.analog.lyric.chmpl.MonkeyHandler;
+import com.analog.lyric.chimple.MonkeyHandler;
+
 import org.apache.commons.math.special.Gamma;
 
 public class ChimpBeta extends MonkeyBase 
@@ -25,7 +26,6 @@ public class ChimpBeta extends MonkeyBase
 	public ChimpBeta(MonkeyHandler handler) 
 	{
 		super(handler);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -36,12 +36,11 @@ public class ChimpBeta extends MonkeyBase
 		double beta = (Double)parameters[1];
 		
 		double [] tmp = getRandom().nextDirichlet(new double [] {alpha,beta});
-		// TODO Auto-generated method stub
 		return tmp[0];
 	}
 
 	@Override
-	public double calculateLikelihood(Object result, Object[] parameters) 
+	public double calculateLogLikelihood(Object result, Object[] parameters) 
 	{
 		/*
 		 *     alphas=[alpha beta];

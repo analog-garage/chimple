@@ -14,7 +14,7 @@
 *   limitations under the License.
 ********************************************************************************/
 
-package com.analog.lyric.chmpl;
+package com.analog.lyric.chimple;
 
 public abstract class CostBase 
 {
@@ -33,5 +33,5 @@ public abstract class CostBase
 	}
 
 	
-	public abstract double calculateCost(Object ... results);
+	public abstract double calculateCost(Object result);
 }

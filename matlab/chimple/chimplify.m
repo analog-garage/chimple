@@ -92,7 +92,7 @@ function [result,ll] = runProgram(program,arguments,monkeyHandler,costfunction)
 
     if ~isempty(costfunction)
         if iscell(result)
-            addChmplCost(costfunction(result{:}));
+            addChimpCost(costfunction(result{:}));
         else
             addChimpCost(costfunction(result));
         end

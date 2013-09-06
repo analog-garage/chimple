@@ -14,12 +14,12 @@
 *   limitations under the License.
 ********************************************************************************/
 
-package com.lyricsemi.chmpl.test;
+package com.analog.lyric.chimple;
 
 
 import org.junit.Test;
 
-import com.analog.lyric.chmpl.ChimpleProgram.ChmplResults;
+import com.analog.lyric.chimple.ChimpleProgram.ChimpleResults;
 
 import static org.junit.Assert.*;
 
@@ -41,7 +41,7 @@ public class MyTest
 		MyBiasProgram m = new MyBiasProgram();
 		
 		//m.run();
-		ChmplResults results = m.chimplify(burnin, samples, spacing);
+		ChimpleResults results = m.chimplify(burnin, samples, spacing);
 		
 		int num0s = 0;
 		int num1s = 0;
@@ -70,10 +70,10 @@ public class MyTest
 
 
 		ExternalCostProgram program = new ExternalCostProgram();
-		ChmplResults results = program.chimplify(burnin,spacing,samples,new Object [] {},new ExternalCost());
+		ChimpleResults results = program.chimplify(burnin,spacing,samples,new Object [] {},new ExternalCost());
 		
-		for (int i = 0; i < results.getLikelihoods().length; i++)
-			assertTrue(results.getLikelihoods()[i] == Math.log(10));
+		for (int i = 0; i < results.getLogLikelihoods().length; i++)
+			assertTrue(results.getLogLikelihoods()[i] == Math.log(10));
 
 	}
 	
@@ -95,7 +95,7 @@ public class MyTest
 			
 			m.setSeed(0);
 			//m.run();
-			ChmplResults results = m.chimplify(burnin, samples, spacing);
+			ChimpleResults results = m.chimplify(burnin, samples, spacing);
 			
 			int num0s = 0;
 			int num1s = 0;

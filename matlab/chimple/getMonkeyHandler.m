@@ -18,7 +18,7 @@ function monkeyHandler = getMonkeyHandler()
     global gMonkeyHandler;
     
     if isempty(gMonkeyHandler)
-       gMonkeyHandler = com.analog.lyric.chmpl.MatlabProxy();
+       gMonkeyHandler = com.analog.lyric.chimple.MatlabProxy();
     end
     monkeyHandler = gMonkeyHandler;
 end

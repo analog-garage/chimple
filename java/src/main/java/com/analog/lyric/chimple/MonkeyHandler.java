@@ -14,7 +14,7 @@
 *   limitations under the License.
 ********************************************************************************/
 
-package com.analog.lyric.chmpl;
+package com.analog.lyric.chimple;
 
 import java.util.ArrayList;
 import java.util.HashMap;

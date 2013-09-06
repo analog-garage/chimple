@@ -14,17 +14,18 @@
 *   limitations under the License.
 ********************************************************************************/
 
-package com.analog.lyric.chmpl;
+package com.analog.lyric.chimple;
 
-public class ChimpleException extends RuntimeException 
+
+/*
+ * The MatlabProxy class is used by the MATLAB Chmpl.  It is a thin wrapper around
+ * ChmplProgram, simply making it a concrete class.
+ */
+public class MatlabProxy extends ChimpleProgram 
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-	public ChimpleException(String str)
+	@Override
+	public Object run(Object ... args)  
 	{
-		super(str);
+		throw new ChimpleException("ack");
 	}
 }

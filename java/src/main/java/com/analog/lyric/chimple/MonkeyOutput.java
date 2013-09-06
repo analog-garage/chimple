@@ -14,7 +14,7 @@
 *   limitations under the License.
 ********************************************************************************/
 
-package com.analog.lyric.chmpl;
+package com.analog.lyric.chimple;
 
 /*
  * MonkeyOutput instances represent the results of calls to elementary random monkeys. 
@@ -51,7 +51,7 @@ public class MonkeyOutput
 	{
 		return _value;
 	}
-	public double getLikelihood()
+	public double getLogLikelihood()
 	{
 		return _loglikelihood;
 	}
@@ -92,7 +92,7 @@ public class MonkeyOutput
 		_savedValue = _value;
 	}
 	
-	public void setValueAndLikelihood(Object result, double likelihood,
+	public void setValueAndLogLikelihood(Object result, double likelihood,
 			int runNumber) 
 	{
         saveValue();

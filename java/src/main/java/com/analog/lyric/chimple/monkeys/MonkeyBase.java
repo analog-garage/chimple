@@ -14,12 +14,13 @@
 *   limitations under the License.
 ********************************************************************************/
 
-package com.analog.lyric.chmpl.monkeys;
+package com.analog.lyric.chimple.monkeys;
 
-import com.analog.lyric.chmpl.ChimpleException;
-import com.analog.lyric.chmpl.MonkeyHandler;
-import com.analog.lyric.chmpl.MonkeyOutput;
+import com.analog.lyric.chimple.ChimpleException;
+import com.analog.lyric.chimple.MonkeyHandler;
+import com.analog.lyric.chimple.MonkeyOutput;
 import com.analog.lyric.math.RandomPlus;
+
 import java.util.Arrays;
 
 /*
@@ -44,7 +45,7 @@ public abstract class MonkeyBase
 	}
 	
 	public abstract Object generate(Object [] parameters) ;
-	public abstract double calculateLikelihood(Object result, Object [] parameters);
+	public abstract double calculateLogLikelihood(Object result, Object [] parameters);
 	public abstract RegeneratorPair regenerate(Object oldVal, Object [] parameters) ;
 	
 	public class RegeneratorPair
@@ -67,7 +68,7 @@ public abstract class MonkeyBase
 		}
 	}
 	
-	private boolean paramatersAreSame(Object [] params1, Object [] params2)
+	protected boolean paramatersAreSame(Object [] params1, Object [] params2)
 	{
 		return Arrays.deepEquals(params1, params2);
 	}
@@ -77,47 +78,76 @@ public abstract class MonkeyBase
 		
 		_monkeyHandler.plusplus();
 		
+		//Check to see if we're running Metropolis Hastings or just running
+		//forwards
 		if (!_monkeyHandler.getMHMode())
 		{
+			//If we're just running forwards, just regenerate the value.
 			return generate(parameters);
 		}
 		else
 		{
+			//We're running metropolis hasings
+			
+			//What run is this?
 			int runNumber = _monkeyHandler.getRunNumber();
 			
+			//See if a monkey by this name exists
 			MonkeyOutput monkey = _monkeyHandler.getMonkeyByName(name);
 			
 			if (monkey != null)
 			{
+				//A monkey by this name already exists
+				
+				//If this variable was already created this run, throw an error.
 				if (monkey.getLastTouched() == runNumber)
 					throw new ChimpleException("Variable (" + name + ") already created");
 				
+				//Check to see if this is the monkey we chose to resample.
 				if (monkey.getIsChosenOne())
 				{
+					//It is.
+					
+					//Retrieve the old value and old log likelihood
 					Object oldVal = monkey.getValue();
-					double oldll = monkey.getLikelihood();
+					double oldll = monkey.getLogLikelihood();
+					
+					//Regenerat a new value.
 					RegeneratorPair pair = regenerate(oldVal, parameters);
-					double likelihood = calculateLikelihood(pair.getResult(), parameters);
-					monkey.setValueAndLikelihood(pair.getResult(),likelihood,runNumber);
+					
+					//Calculate the new log likelihood.
+					double likelihood = calculateLogLikelihood(pair.getResult(), parameters);
+					
+					//Set the value, the log likelihood, and the new run number
+					monkey.setValueAndLogLikelihood(pair.getResult(),likelihood,runNumber);
+					
+					//Set the hastings value.
 					_monkeyHandler.setHastings(likelihood-oldll+pair.getHastings());
 				
 					return pair.getResult();
 				}
 				else
 				{
+					//This is not the chosen one.
 					
+					//Check to see if we've already encountered these parameters
 					if (paramatersAreSame(parameters,monkey.getParameters()))
 					{
+						//TODO: are we supposed to regenerate?
+						
+						//If we have, return the existing value
 		                Object result = monkey.getValue();
-		                double likelihood = calculateLikelihood(result,parameters);
+		                
+		                //Retrieve the likelihood
+		                double likelihood = calculateLogLikelihood(result,parameters);
 		                monkey.setLikelihood(likelihood,runNumber);
 		                return result;
 					}
 					else
 					{
 						Object result = generate(parameters);
-						double likelihood = calculateLikelihood(result, parameters);
-		                monkey.setValueAndLikelihood(result,likelihood,runNumber);
+						double likelihood = calculateLogLikelihood(result, parameters);
+		                monkey.setValueAndLogLikelihood(result,likelihood,runNumber);
 		                monkey.setParameters(parameters);
 		                return result;
 
@@ -127,7 +157,7 @@ public abstract class MonkeyBase
 			else
 			{
 				Object result = generate(parameters);
-				double likelihood = calculateLikelihood(result,parameters);
+				double likelihood = calculateLogLikelihood(result,parameters);
 				_monkeyHandler.addMonkey(name,result,likelihood,runNumber,parameters);
 				return result;
 			}

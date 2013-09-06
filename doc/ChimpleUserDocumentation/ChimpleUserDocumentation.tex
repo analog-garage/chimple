@@ -57,8 +57,8 @@
 	\else
                 %modify this flag to matlabtrue or javatrue when editing with TexShop
                 %When building from the commandline this will be ignored.
-%		\javatrue
-		\matlabtrue
+		\javatrue
+%		\matlabtrue
 	\fi
 \fi
 
@@ -108,7 +108,7 @@ A \textit{generative model} is a probabilistic model for describing randomly gen
 Since a stochastic program has a random component, running it twice will (generally speaking) produce two different outputs.  By running the program multiple times, we can sample from the underlying distribution on the data specified by the generative model.  
 
 
-In the typical situation, we wish to condition on the output (i.e. we observe the data) and wish to perform inference on the hidden variables that generated it.  In some sense, we wish to ?run the program backwards? to observe the distribution of the latent variables.  Chimple allows us to perform this type of inference.
+In the typical situation, we wish to condition on the output (i.e. we observe the data) and wish to perform inference on the hidden variables that generated it.  In some sense, we wish to "run the program backwards" to observe the distribution of the latent variables.  Chimple allows us to perform this type of inference.
 
 
 In Chimple, each new variable has to be explicitly and unambiguously defined, using only variables which have previously been defined.  (Properly defined recursive definitions are valid, assuming they terminate.)  The crucial differences between a generative model for data and a regular program are as follows:
@@ -125,21 +125,46 @@ Here are a few examples of building generative models of data.
 
 In this first example, we simply create a randomly biased coin, and flip it 20 times.
 
+\ifmatlab
 \begin{lstlisting}
 % Generates a random weight for a coin
 weight=chimprand('weight');
 for i=1:20
   % given an input weight, creates a coin which flips heads with
   % probability equal to weight
-  X(i)=chimpflip(weight,sprintf('X',i));
+  X(i)=chimpflip(sprintf('X',i),weight);
 end
 \end{lstlisting}
+\fi
+\ifjava
+\begin{lstlisting}
 
-In the second example, we generate two binary random variables ? lung\_cancer and cold ? with probabilities 0.01 and 0.2 respectively, and define cough as a binary variable equal to 1 if either lung\_cancer or cold is 1.
+public class MyProgram extends ChimpleProgram
+{
+	@Override
+	public Object run(Object... args) 
+	{
+		
+		double weight = chimpRand("weight");
+		int [] X = new int[20];
+		for (int i = 0; i < 20; i++)
+		{
+			//given an input weight , creates a coin which flips heads with % probability equal to weight
+			X[i]=chimpFlip(("X" + i),weight);
+		}
+		return null;
+	}
+}
+\end{lstlisting}
+
+\fi
+
+In the second example, we generate two binary random variables, lung\_cancer and cold, with probabilities 0.01 and 0.2 respectively, and define cough as a binary variable equal to 1 if either lung\_cancer or cold is 1.
 
 
 \subsection{At termination, the user specifies which variables or data he wants to sample}
 
+\ifmatlab
 \begin{lstlisting}
 %defines the probability of lung cancer to be 1%
 lung_cancer=chimpflip('LG',0.01);
@@ -147,8 +172,25 @@ lung_cancer=chimpflip('LG',0.01);
 cold=chimpflip('cold',0.2);
 %cough is present if cold or lung cancer is present
 cough=or(cold, lung_cancer);
-A
 \end{lstlisting}
+\fi
+
+\ifjava
+\begin{lstlisting}
+public class MyProgram extends ChimpleProgram
+{
+	@Override
+	public Object run(Object... args) 
+	{
+		int lung_cancer = chimpFlip("LG",0.01);
+		int cold = chimpFlip("cold",0.2);
+		int cough = cold | lung_cancer;
+		
+		return null;
+	}
+}
+\end{lstlisting}
+\fi
 
 generative model is usually run several times. Each time the program completes, Chimple records which variables are to be kept and displayed to the users (though technically, at the end of each run, a sample of all variables which were created is in memory, typically only some are of interest to the users). These are the latent variables of the system.
 
@@ -162,6 +204,7 @@ Conditioning on the output of the program retroactively makes most variables in 
 
 Let us continue the medical diagnosis example:
 
+\ifmatlab
 \begin{lstlisting}
 %defines the probability of lung cancer to be 1%
 lung_cancer=chimpflip('LG',0.01);
@@ -170,8 +213,38 @@ cold=chimpflip('cold',0.2);
 %cough is present if cold or lung cancer is present
 cough=or(cold, lung_cancer);
 %we observe that the patient is coughing
-addHardChimpConstraint(cough,1);
+if cough == 1
+	addChimpCost(0);
+else
+	addChimpCost(Inf);
+end
 \end{lstlisting}
+\fi
+
+\ifjava
+\begin{lstlisting}
+public class MyProgram extends ChimpleProgram
+{
+
+	
+	@Override
+	public Object run(Object... args) 
+	{
+		//defines the probability of lung cancer to be 1%
+		int lung_cancer = chimpFlip ( "LG" ,0.01) ;
+		//defines the probability of cold cancer to be 20%
+		int cold = chimpFlip ( "cold" ,0.2) ;
+		//cough is present if cold or lung cancer is present
+		int cough= cold | lung_cancer;
+		//we observe that the patient is coughing
+		addCost(cough == 1 ? 0 : Double.POSITIVE_INFINITY);
+		
+		return null;
+	}
+}
+\end{lstlisting}
+\fi
+
 
 The above program represents the following model:
 
@@ -235,19 +308,53 @@ In general, X contains a large number of variables and one does not want to resa
 
 Consider the following program:
 
+\ifmatlab
 \begin{lstlisting}
-A=chimpflip(?A?);
-B1=chimpflip(?B1?);
+A=chimpflip('A');
+B1=chimpflip('B1');
 if A
-     B2=chimpflip(?B2?);
-     B3=chimpflip(?B3?);
+     B2=chimpflip('B2');
+     B3=chimpflip('B3');
      C=and(and(B1,B2),B3);
 else
-     B4=chimpflip(?B4?);
+     B4=chimpflip('B4');
      C=not(B4);
 end
-D= chimpflip(?D?);
+D= chimpflip('D');
 \end{lstlisting}
+\fi
+\ifjava
+\begin{lstlisting}
+public class MyProgram extends ChimpleProgram
+{
+	@Override
+	public Object run(Object... args) 
+	{
+		int A = chimpFlip("A");
+		int B1 = chimpFlip("B1");
+		int B2 = 0;
+		int B3 = 0;
+		int B4;
+		int C = 0;
+		int D = 0;
+		if (A == 1)
+		{
+		     B2 = chimpFlip("B2");
+		     B3 = chimpFlip("B3");
+		     C = B1 & B2 & B3;
+		}
+		else
+		{
+		     B4 = chimpFlip("B4");
+		     C = B4==1?0:1;
+		}
+		D = chimpFlip("D");
+		
+		return null;
+	}
+}
+\end{lstlisting}
+\fi
 
 Suppose that we observed that C is false, and let us start an MCMC sampler with sample path X=(A=true, B1=true, b2=true, B3=false, C=false,D=true). Following the idea of a partial resample, let us suppose we create a new sample path X? by only resampling A, making it now false, leading to a proposed new state X?=(A=false, B1=true, B2=true, B3=false, C=false,D=true). Let us note this is in fact not an admissible sample - even though C is still false. Indeed, if A is false, B2 and B3 should not exist, but B4 should.
 
@@ -279,6 +386,7 @@ The conditioning expression, or data cost, can be included in both the stochasti
 
 Recall the following stochastic program:
 
+\ifmatlab
 \begin{lstlisting}
 function [lung_cancer]=medical_BN()
 %defines the probability of lung cancer to be 1%
@@ -288,16 +396,48 @@ cold=chimpflip('cold',0.2);
 %cough is present if cold or lung cancer is present
 cough=or(cold, lung_cancer);
 %we observe that the patient is coughing
-addHardChimpConstraint(cough,1);
+if cough==1
+	addChimpCost(0);
+else
+	addChimpCost(Inf);
+end
 \end{lstlisting}
+\fi
+
+\ifjava
+\begin{lstlisting}
+public class MyProgram extends ChimpleProgram
+{
+	@Override
+	public Object run(Object... args) 
+	{
+		//defines the probability of lung cancer to be 1%
+		int lung_cancer = chimpFlip("LG",0.01);
+		//defines the probability of cold cancer to be 20%
+		int cold = chimpFlip("cold",0.2);
+		//cough is present if cold or lung cancer is present
+		int cough = cold | lung_cancer;
+		addCost(cough == 1?0:Double.POSITIVE_INFINITY);
+		return null;
+	}
+}
+\end{lstlisting}
+\fi
 
 The program starts by defining the "lung\_cancer" monkey as a binomial (or "flip") variable, equal to 1 with probability 1\%. Note that the monkey takes two parameters: the first parameter of any monkey is its name. The name of an monkey is simply a unique `internal? identifier for each monkey. Since stochastic program (even complex, recursive ones) correspond to directed probabilistic models, the requirement that each monkey can be given a unique name is always possible. In that sense, each monkey may have two names. The first is the internal name of the monkey, which is always the first argument of the monkey call (in this case, "LG"). The second, which is optional, is the name of the value the monkey actually takes, in this case, "lung\_cancer". A future version of Chimple will remove the need from the user to specify a unique internal name - as it will be derived automatically from the program at execution time. While using the same name for the internal and the Matlab name of the variable is good practice, Chimple does not require both names to be identical (as evidenced by the lung\_cancer variable).
 
-In short, an monkey call will always take the following form
+In short, a monkey call will always take the following form
 
+\ifmatlab
 \begin{lstlisting}
 Matlab_name=erm_name('internal_name',parameters);
 \end{lstlisting}
+\fi
+\ifjava
+\begin{lstlisting}
+type java_name=erm_name("internal_name",parameters);
+\end{lstlisting}
+\fi
 
 where Matlab\_name is optional (in case the monkey is used directly in a computation), and parameters is optional as well (depending on the monkey).
 
@@ -307,20 +447,42 @@ The output of a stochastic programs consists of the variables which will be kept
 
 In order to run our stochastic program, we always need to write a very simple "meta-program", which specifies the sampling parameters (and potential conditioning statements).
 
+\ifmatlab
 \begin{lstlisting}
 burnin = 0;
 samples = 300;
 spacing = 10;
 results = chimplify(@medical_BN,burnin,samples,spacing);
 \end{lstlisting}
+\fi
+
+\ifjava
+\begin{lstlisting}
+int burnin = 0;
+int samples = 300;
+int spacing = 10;
+MyProgram program = new MyProgram();
+program.chimplify(burnin, samples, spacing);
+\end{lstlisting}
+\fi
 
 Burnin specifies how many samples are used for the MCMC "burn-in" (i.e. how many MCMC iterations are run without keeping results). Samples specifies the number of required samples. Spacing specifies how many iterations are run between each conserved sample.
 
+\ifmatlab
 The last command, "chimplify", runs the stochastic program. It has the following syntax:
 
 \begin{lstlisting}
 results=chimplify(@program_name,burnin,samples,spacing,arguments,condition,carg)
 \end{lstlisting}
+\fi
+
+\ifjava
+The last command program.chimplify, runs the stochastic program.  It is a method on the ChimpleProgram class from which all Chimple programs must inherit.  It has the following syntax:
+
+\begin{lstlisting}
+Object results = program.chimplify(int burnin,int samples,int spacing,Object [] arguments,CostBase cost);
+\end{lstlisting}
+\fi
 
 where condition may be unspecified; results will always be a cell array of the outputs of the stochastic program (in this case, it will be a cell array of length 300, each cell containing one value). Arguments is a cell array of arguments which will be passed to the program 'program\_name'. condition is a cost function which takes the output of the program as input, and returns the negative log of a data likelihood function. Carg is an optional cell array of supplemental arguments to the condition function.
 
@@ -337,17 +499,34 @@ Conditioning statements - or score functions, as they are generally defined in C
 
 \item In many cases, declaring a constraint inside the stochastic program can be seen as undesirable from a UI point of view. Chimple allows the user to declare a cost function as part of the arguments of chimplify. In Chimple, a cost function should always be declared to be a function of the outputs of the stochastic program (even if those outputs are not used). A cost function should not declare any additional monkeys and should consist only of : computation of the desired score function (regular Matlab code), and sending those negative-log score functions to Chimple. This is done using the regular addChimpCost function. However, recall that in the scope of the cost function, only the values of the variables output as a result of the stochastic program will be accessible. The names of those output variables won't be accessible, and neither the name nor the value of non-output variables will be accessible. We therefore provide a method for accessing a variable (monkey or not) outside of the scope of the stochastic program. To access any value outside of the stochastic program, we simply use the 'chimpConst' method. chimpConst requires syntax similar to an monkey:
 
+\ifmatlab
 \begin{lstlisting}
-?chimpConst('access_name', value);
+chimpConst('access_name', value);
 \end{lstlisting}
+\fi
+
+\ifjava
+\begin{lstlisting}
+program.chimpConst("access_name", value);
+\end{lstlisting}
+\fi
+
 
 Just like for an monkey, the access\_name must be unique and used once - it cannot be used for another monkey - however, ALL monkeys are accessible outside of the stochastic program by their unique name - they do not need to be stored under a chimpConst.
 
 Then, the value stored under 'access\_name' can be retrieved in the cost function using the command
 
+\ifmatlab
 \begin{lstlisting}
 Value=getChimpValue('erm_access_name');
 \end{lstlisting}
+\fi
+
+\ifjava
+\begin{lstlisting}
+Object value = getValue("erm_access_name");
+\end{lstlisting}
+\fi
 
 Armed with the information above, we show how to rewrite the example with the cost function external to the stochastic program.
 

@@ -14,9 +14,9 @@
 *   limitations under the License.
 ********************************************************************************/
 
-package com.analog.lyric.chmpl.monkeys;
+package com.analog.lyric.chimple.monkeys;
 
-import com.analog.lyric.chmpl.MonkeyHandler;
+import com.analog.lyric.chimple.MonkeyHandler;
 
 /*
  * A random monkey that generates a 1 or 0
@@ -45,7 +45,7 @@ public class ChimpFlip extends MonkeyBase
 	}
 
 	@Override
-	public double calculateLikelihood(Object result, Object[] parameters) 
+	public double calculateLogLikelihood(Object result, Object[] parameters) 
 	{
 		int value = (Integer)result;
 		double weight = (Double)parameters[0];

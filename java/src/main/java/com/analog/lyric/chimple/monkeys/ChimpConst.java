@@ -14,13 +14,15 @@
 *   limitations under the License.
 ********************************************************************************/
 
-package com.analog.lyric.chmpl.monkeys;
+package com.analog.lyric.chimple.monkeys;
 
-import com.analog.lyric.chmpl.MonkeyHandler;
+import com.analog.lyric.chimple.ChimpleException;
+import com.analog.lyric.chimple.MonkeyHandler;
 
-public class ChimpRandn extends MonkeyBase 
+public class ChimpConst extends MonkeyBase
 {
-	public ChimpRandn(MonkeyHandler handler) 
+
+	public ChimpConst(MonkeyHandler handler) 
 	{
 		super(handler);
 	}
@@ -28,30 +30,31 @@ public class ChimpRandn extends MonkeyBase
 	@Override
 	public Object generate(Object[] parameters)  
 	{
-		double mu = (Double)parameters[0];
-		double sigma = (Double)parameters[1];
-		
-		return getRandom().nextGaussian()*sigma+mu;
+		if (parameters.length != 1)
+			throw new ChimpleException("expected one argument");
+		return parameters[0];
 	}
 
 	@Override
-	public double calculateLikelihood(Object result, Object[] parameters) 
+	public double calculateLogLikelihood(Object result, Object[] parameters) 
 	{
-		double value = (Double)result;
-		double mu = (Double)parameters[0];
-		double sigma = (Double)parameters[1];
-		
-		//1/sqrt(2*pi*sigma^2)*exp(-(mu-value)^2/(2*sigma^2))
-		//log(sqrt(2*pi*sigma^2) + (mu-value)^2/(2*sigma^2)
-		return Math.log(Math.sqrt(2*Math.PI*sigma*sigma)) + (mu-value)*(mu-value)/(2*sigma*sigma);
+		return 0;
 	}
 
 	@Override
 	public RegeneratorPair regenerate(Object oldVal, Object[] parameters)  
 	{
-		double mu = (Double)oldVal;
-		double sigma2 = (Double)parameters[2];
-		return new RegeneratorPair(getRandom().nextGaussian()*sigma2 + mu,0);
+		if (parameters.length != 1)
+			throw new ChimpleException("expected one argument");
+		
+		return new RegeneratorPair(parameters[0],0);
 	}
+	
+	@Override
+	protected boolean paramatersAreSame(Object [] params1, Object [] params2)
+	{
+		return false;
+	}
+
 
 }

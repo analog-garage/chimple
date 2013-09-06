@@ -14,11 +14,11 @@
 *   limitations under the License.
 ********************************************************************************/
 
-package com.analog.lyric.chmpl.monkeys;
+package com.analog.lyric.chimple.monkeys;
 
 import java.util.HashMap;
 
-import com.analog.lyric.chmpl.MonkeyHandler;
+import com.analog.lyric.chimple.MonkeyHandler;
 
 public class ChimpDiscrete extends MonkeyBase 
 {
@@ -38,7 +38,7 @@ public class ChimpDiscrete extends MonkeyBase
 	}
 
 	@Override
-	public double calculateLikelihood(Object result, Object[] parameters) 
+	public double calculateLogLikelihood(Object result, Object[] parameters) 
 	{
 		//value, probs, set, dictionary
 		double [] probs = (double[])parameters[0];

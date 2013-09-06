@@ -14,9 +14,9 @@
 *   limitations under the License.
 ********************************************************************************/
 
-package com.lyricsemi.chmpl.test;
+package com.analog.lyric.chimple;
 
-import com.analog.lyric.chmpl.ChimpleProgram;
+import com.analog.lyric.chimple.ChimpleProgram;
 
 /*
  * This is an exmaple of a chimple program.  The BiasTest

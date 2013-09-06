@@ -14,18 +14,22 @@
 *   limitations under the License.
 ********************************************************************************/
 
-package com.analog.lyric.chmpl;
+package com.analog.lyric.chimple;
 
+import com.analog.lyric.chimple.ChimpleProgram;
 
-/*
- * The MatlabProxy class is used by the MATLAB Chmpl.  It is a thin wrapper around
- * ChmplProgram, simply making it a concrete class.
- */
-public class MatlabProxy extends ChimpleProgram 
+public class ExternalCostProgram extends ChimpleProgram 
 {
+
 	@Override
 	public Object run(Object ... args)  
 	{
-		throw new ChimpleException("ack");
+		int a = chimpFlip("a");
+		int b = chimpFlip("b");
+		Object value = chimpConst("c", a+b+1);
+		chimpConst("d",10);
+		
+		return value;
 	}
+
 }

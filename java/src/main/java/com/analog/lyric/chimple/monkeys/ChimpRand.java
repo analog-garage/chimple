@@ -14,27 +14,37 @@
 *   limitations under the License.
 ********************************************************************************/
 
-package com.lyricsemi.chmpl.test;
+package com.analog.lyric.chimple.monkeys;
 
-import com.analog.lyric.chmpl.CostBase;
-//import org.junit.Test;
-import static org.junit.Assert.*;
+import com.analog.lyric.chimple.MonkeyHandler;
 
-public class ExternalCost extends CostBase 
+/*
+ * A random monkey that generates a uniform distribution between 0 and 1.
+ */
+public class ChimpRand extends MonkeyBase
 {
 
-	@Override
-	public double calculateCost(Object... results) 
+	public ChimpRand(MonkeyHandler handler) 
 	{
-		int a = (Integer)getValue("a");
-		int b = (Integer)getValue("b");
-		int c = (Integer)getValue("c");
-		int d = (Integer)getValue("d");
-	    
-		assertTrue(c==a+b+1);
-	    assertTrue(results[0].equals(c));
-	    
-		return Math.log(d);
+		super(handler);
+	}
+
+	@Override
+	public Object generate(Object[] parameters) 
+	{
+		return getRandom().nextDouble();
+	}
+
+	@Override
+	public double calculateLogLikelihood(Object result, Object[] parameters) 
+	{
+		return 0;
+	}
+
+	@Override
+	public RegeneratorPair regenerate(Object oldVal, Object[] parameters) 
+	{
+		return new RegeneratorPair(getRandom().nextDouble(),0);
 	}
 
 }
