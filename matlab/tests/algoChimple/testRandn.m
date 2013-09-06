@@ -16,7 +16,7 @@
 
 function testRandn()
 
-    setChmplSeed(0);
+    setChimpleSeed(0);
 
     mu = 2;
     sigma = .7;
@@ -58,7 +58,7 @@ function testRandn()
     %-log(1/sqrt(2*pi*sigma^2)*exp(-(u-sample)^2/2*sigma^2))
     %log(sqrt(2*pi*sigma^2)) + (u-sample)^2/(2*sigma^2)
     sample = rand()+mu;
-    ll = r.calculateLikelihood(sample,{mu,sigma,sigma2});
+    ll = r.calculateLogLikelihood(sample,{mu,sigma,sigma2});
     ell = log(sqrt(2*pi*sigma^2)) + (mu-sample)^2/(2*sigma^2);
     assertElementsAlmostEqual(ll,ell);
 end

@@ -16,7 +16,7 @@
 
 function testBeta()
 
-    setChmplSeed(0);
+    setChimpleSeed(0);
 
     N = 1000;
     results = zeros(N,1);
@@ -60,8 +60,8 @@ function testBeta()
     %chimpbeta_likelihood(.99,alpha,beta)
     x = .99;
     y = .9;
-    a = bhandler.calculateLikelihood(x,{alpha,beta});
-    b = bhandler.calculateLikelihood(y,{alpha,beta});
+    a = bhandler.calculateLogLikelihood(x,{alpha,beta});
+    b = bhandler.calculateLogLikelihood(y,{alpha,beta});
 
 
     %We take the difference in the log domain (ratio outside of log domain) so

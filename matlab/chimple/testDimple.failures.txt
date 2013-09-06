@@ -1,15 +1,73 @@
-testDimple had errors. 202 of 203 tests passed, 1 failed
+testDimple had errors. 11 of 19 tests passed, 8 failed
 
 ===== Test Case Failure =====
 Location: /Users/shershey/git/chimple/matlab/tests/algoChimple/testBeta.m
 Name:     testBeta
 
-/Users/shershey/git/chimple/matlab/chimple/monkeys/elementary_monkeys/chimpbeta.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/chimple/monkeys/elementary_monkeys/chimpbeta.m',11)">line 11</a>
-/Users/shershey/git/chimple/matlab/tests/algoChimple/testBeta.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/tests/algoChimple/testBeta.m',12)">line 12</a>
+/Users/shershey/git/chimple/matlab/tests/algoChimple/testBeta.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/tests/algoChimple/testBeta.m',19)">line 19</a>
 
-Java exception occurred: 
-com.analog.lyric.chmpl.ChimpleException: Variable (foo) already created
-	at com.analog.lyric.chmpl.monkeys.MonkeyBase.runMonkey(MonkeyBase.java:88)
-	at com.analog.lyric.chmpl.ChmplProgram.chimpBeta(ChmplProgram.java:133)
-	at com.analog.lyric.chmpl.ChmplProgram.chimpBeta(ChmplProgram.java:128)
+Undefined function 'setChmplSeed' for input arguments of type 'double'.
+
+
+===== Test Case Failure =====
+Location: /Users/shershey/git/chimple/matlab/tests/algoChimple/testDirichlet.m
+Name:     testDirichlet
+
+/Users/shershey/git/chimple/matlab/tests/algoChimple/testDirichlet.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/tests/algoChimple/testDirichlet.m',19)">line 19</a>
+
+Undefined function 'setChmplSeed' for input arguments of type 'double'.
+
+
+===== Test Case Failure =====
+Location: /Users/shershey/git/chimple/matlab/tests/algoChimple/testDiscrete.m
+Name:     testDiscrete
+
+/Users/shershey/git/chimple/matlab/tests/algoChimple/testDiscrete.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/tests/algoChimple/testDiscrete.m',21)">line 21</a>
+
+Undefined function 'setChmplSeed' for input arguments of type 'double'.
+
+
+===== Test Case Failure =====
+Location: /Users/shershey/git/chimple/matlab/tests/algoChimple/testFlip.m
+Name:     testFlip
+
+/Users/shershey/git/chimple/matlab/tests/algoChimple/testFlip.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/tests/algoChimple/testFlip.m',19)">line 19</a>
+
+Undefined function 'setChmplSeed' for input arguments of type 'double'.
+
+
+===== Test Case Failure =====
+Location: /Users/shershey/git/chimple/matlab/tests/algoChimple/testGamma.m
+Name:     testGamma
+
+/Users/shershey/git/chimple/matlab/tests/algoChimple/testGamma.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/tests/algoChimple/testGamma.m',19)">line 19</a>
+
+Undefined function 'setChmplSeed' for input arguments of type 'double'.
+
+
+===== Test Case Failure =====
+Location: /Users/shershey/git/chimple/matlab/tests/algoChimple/testPerm.m
+Name:     testPerm
+
+/Users/shershey/git/chimple/matlab/tests/algoChimple/testPerm.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/tests/algoChimple/testPerm.m',19)">line 19</a>
+
+Undefined function 'setChmplSeed' for input arguments of type 'double'.
+
+
+===== Test Case Failure =====
+Location: /Users/shershey/git/chimple/matlab/tests/algoChimple/testRandn.m
+Name:     testRandn
+
+/Users/shershey/git/chimple/matlab/tests/algoChimple/testRandn.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/tests/algoChimple/testRandn.m',19)">line 19</a>
+
+Undefined function 'setChmplSeed' for input arguments of type 'double'.
+
+
+===== Test Case Failure =====
+Location: /Users/shershey/git/chimple/matlab/tests/algoChimple/testSeed.m
+Name:     testSeed
+
+/Users/shershey/git/chimple/matlab/tests/algoChimple/testSeed.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/tests/algoChimple/testSeed.m',28)">line 28</a>
+
+Undefined function 'setChmplSeed' for input arguments of type 'double'.
 

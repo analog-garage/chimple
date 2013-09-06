@@ -25,7 +25,7 @@ for i = 1:10
     samples = 100;
     spacing = 0;
     
-    setChmplSeed(0);
+    setChimpleSeed(0);
     
     results = chimplify(@biasprogram,burnin,samples,spacing);
 

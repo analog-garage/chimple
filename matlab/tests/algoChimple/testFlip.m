@@ -16,7 +16,7 @@
 
 function testFlip()
 
-    setChmplSeed(0);
+    setChimpleSeed(0);
     N = 1000;
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -45,12 +45,12 @@ function testFlip()
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %Test likelihood
-    actual = flip.calculateLikelihood(int32(1),{p});
+    actual = flip.calculateLogLikelihood(int32(1),{p});
     expected = -log(p);
     assertEqual(actual,expected);
 
 
-    actual = flip.calculateLikelihood(int32(0),{p});
+    actual = flip.calculateLogLikelihood(int32(0),{p});
     expected = -log(1-p);
     assertEqual(actual,expected);
 

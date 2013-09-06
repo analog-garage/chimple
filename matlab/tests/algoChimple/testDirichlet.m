@@ -16,7 +16,7 @@
 
 function testDirichlet()
 
-    setChmplSeed(0);
+    setChimpleSeed(0);
     alphas = [2 3 5];
     N = 500;
 
@@ -77,7 +77,7 @@ function testDirichlet()
     actual = chimpdirichlet_likelihood(values,alphas);
     assertElementsAlmostEqual(expected,actual);
 
-    actual2 = monkey.calculateLikelihood(values,{alphas});
+    actual2 = monkey.calculateLogLikelihood(values,{alphas});
     assertElementsAlmostEqual(expected,actual2);
 
 end

@@ -47,6 +47,6 @@ function testRand()
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %likelihood
-    assertEqual(0,r.calculateLikelihood(rand(),{}));
+    assertEqual(0,r.calculateLogLikelihood(rand(),{}));
 
 end

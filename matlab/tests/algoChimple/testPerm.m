@@ -16,7 +16,7 @@
 
 function testPerm
 
-    setChmplSeed(0);
+    setChimpleSeed(0);
 
     N = 3;
     M = 1000;
@@ -45,7 +45,7 @@ function testPerm
     handler = getMonkeyHandler();
     p = handler.getPerm();
     
-    likelihood = p.calculateLikelihood(int32(1:N),int32(N));
+    likelihood = p.calculateLogLikelihood(int32(1:N),int32(N));
     assertEqual(likelihood,log(factorial(N)));
 
 

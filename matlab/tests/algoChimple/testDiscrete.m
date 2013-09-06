@@ -18,7 +18,7 @@ function testDiscrete()
 
     N = 3;
     M = 1000;
-    setChmplSeed(0);
+    setChimpleSeed(0);
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %test gen
@@ -54,7 +54,7 @@ function testDiscrete()
     end
     results = zeros(1,N);
     for i = 1:N
-        results(i) = d.calculateLikelihood(char('a'+i-1),{probs,alphabet,HT});
+        results(i) = d.calculateLogLikelihood(char('a'+i-1),{probs,alphabet,HT});
     end
 
     assertEqual(probs,results);

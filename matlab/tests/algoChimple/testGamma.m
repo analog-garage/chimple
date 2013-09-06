@@ -16,7 +16,7 @@
 
 function testGamma()
 
-    setChmplSeed(0);
+    setChimpleSeed(0);
     
     N = 3000;
 
