@@ -50,6 +50,11 @@ public class ChimpConst extends MonkeyBase
 		return new RegeneratorPair(parameters[0],0);
 	}
 	
+	/*
+	 * To ensure that we generate the constant each time chimpConst is called,
+	 * we return false here.  If we ever implement strong stochastic re-use,
+	 * this will not be sufficient.
+	 */
 	@Override
 	protected boolean paramatersAreSame(Object [] params1, Object [] params2)
 	{

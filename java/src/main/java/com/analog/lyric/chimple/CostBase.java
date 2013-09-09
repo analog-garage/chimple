@@ -27,8 +27,6 @@ public abstract class CostBase
 	
 	public Object getValue(String name)
 	{
-		//TODO: do I need to check that it's an active monkey?
-		
 		return _handler.getMonkeyByName(name).getValue();
 	}
 

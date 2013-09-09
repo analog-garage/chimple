@@ -257,7 +257,7 @@ public abstract class ChimpleProgram
 			rhs += _savedLoglikelihood;
 			accept =  lhs < rhs;
 			
-
+			
 		}
 		
 		if (accept)
