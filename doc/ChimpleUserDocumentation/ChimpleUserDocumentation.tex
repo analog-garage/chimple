@@ -213,11 +213,7 @@ cold=chimpflip('cold',0.2);
 %cough is present if cold or lung cancer is present
 cough=or(cold, lung_cancer);
 %we observe that the patient is coughing
-if cough == 1
-	addChimpCost(0);
-else
-	addChimpCost(Inf);
-end
+addChimpHardConstraint(cough,1);
 \end{lstlisting}
 \fi
 
@@ -237,7 +233,7 @@ public class MyProgram extends ChimpleProgram
 		//cough is present if cold or lung cancer is present
 		int cough= cold | lung_cancer;
 		//we observe that the patient is coughing
-		addCost(cough == 1 ? 0 : Double.POSITIVE_INFINITY);
+		addHardConstraint(cough,1);
 		
 		return null;
 	}
@@ -396,11 +392,7 @@ cold=chimpflip('cold',0.2);
 %cough is present if cold or lung cancer is present
 cough=or(cold, lung_cancer);
 %we observe that the patient is coughing
-if cough==1
-	addChimpCost(0);
-else
-	addChimpCost(Inf);
-end
+addChimpHardConstraint(cough,1);
 \end{lstlisting}
 \fi
 
@@ -417,7 +409,7 @@ public class MyProgram extends ChimpleProgram
 		int cold = chimpFlip("cold",0.2);
 		//cough is present if cold or lung cancer is present
 		int cough = cold | lung_cancer;
-		addCost(cough == 1?0:Double.POSITIVE_INFINITY);
+		addHardConstraint(cough,1);
 		return null;
 	}
 }
@@ -491,7 +483,7 @@ Let us detail how to use arguments and conditioning statements (or likelihood fu
 Conditioning statements - or score functions, as they are generally defined in Chimple - can be declared by the user in two different ways:
 
 \begin{itemize}
-\item The user is allowed to either specify a cost function directly inside the stochastic program. This is done with the command ?addChimpCost?. addChimpCost is called with a single real argument. At the end of the execution of a sample stochastic program, all values which were given to arguments to addChimpCost are added to the overall trace likelihood. We also provide two special cases of addChimpCost:
+\item The user is allowed to either specify a cost function directly inside the stochastic program. This is done with the command "addChimpCost". addChimpCost is called with a single real argument. At the end of the execution of a sample stochastic program, all values which were given to arguments to addChimpCost are added to the overall trace likelihood. We also provide two special cases of addChimpCost:
 \begin{itemize}
 \item The first,addHardChimpConstraint, takes two arguments and enforces hard equality of both arguments.
 \item The second,addSoftChimpConstraint, takes two arguments and an optional third temperature argument, and enforces soft equality of both arguments
@@ -530,41 +522,131 @@ Object value = getValue("erm_access_name");
 
 Armed with the information above, we show how to rewrite the example with the cost function external to the stochastic program.
 
+\ifmatlab
 \begin{lstlisting}
-function [lung_cancer]=medical_BN()
- 
-%defines the probability of lung cancer to be 1%
-lung_cancer=chimpflip('LG',0.01);
-%defines the probability of cold cancer to be 20%
-cold=chimpflip('cold',0.2);
-%cough is present if cold or lung cancer is present
-cough=or(cold, lung_cancer);
- 
- 
-chimpConst('cough',cough);
+function [retval]=medical_BN(observed_cough)
+    %defines the probability of lung cancer to be 1%
+    lung_cancer = chimpflip('LG' ,0.01);
+    %defines the probability of cold cancer to be 20%
+    cold=chimpflip ('cold',0.2);
+    %cough is present if cold or lung cancer is present
+    cough=or(cold, lung_cancer);
+    %save the value of cough
+    chimpconst ('cough',cough);
+    %save the result of the observed cough
+    chimpconst('observed_cough',observed_cough);
+    %return lung cancer, cold, and cough
+    retval = {lung_cancer,cold,cough};
+end
 \end{lstlisting}
 
 \begin{lstlisting}
-function [out]=costfunction(lg_cancer,coughvalue)
- 
-% first argument is required because it is the output of medical_BN.m
-% second argument lets the user choose the actual value cough as a
-% parameter
- 
-addHardChimpConstraint(getChimpValue('cold'),coughvalue);
+function [out]=costfunction(lg_cancer,cold,cough)
+
+if getChimpValue('cough') == getChimpValue('observed_cough');
+    out = 0;
+else
+    out = 100;
+end
+
 \end{lstlisting}
 
 \begin{lstlisting}
-burnin = 10;
-samples = 10000;
+burnin = 10; 
+samples = 100; 
 spacing = 10;
- 
-% did we observe cough?
 cough_value=1;
- 
-results = chimplify(@medical_BN,burnin,samples,spacing,{},@costfunction,cough_value);
+
+results = chimplify(@medical_BN,...
+    burnin , samples , spacing ,{cough_value} , @costfunction);
+
+totals = zeros(length(results),3);
+for i = 1:length(results)
+   for j = 1:3
+       totals(i,j) = results{i}{j};
+   end
+end
+
+disp(sum(totals));
+\end{lstlisting}
+
+\fi
+
+\ifjava
+\begin{lstlisting}
+public class MedicalBayesNet 
+{
+	public static class MyProgram extends ChimpleProgram
+	{
+		@Override
+		public Object run(Object... args) 
+		{
+		    //defines the probability of lung cancer to be 1%
+		    int lung_cancer = chimpFlip("LG" ,0.01);
+		    //defines the probability of cold cancer to be 20%
+		    int cold = chimpFlip ("cold",0.2);
+		    //cough is present if cold or lung cancer is present
+		    int cough = cold | lung_cancer;
+		    
+		    chimpConst ("cough",cough);
+		    chimpConst("coughObserved",args[0]);
+
+		    Object [] retval = new Object []{lung_cancer,cold,cough};
+		    return retval;
+		}
+	}
+	
+	public static class MyCost extends CostBase
+	{
+
+		@Override
+		public double calculateCost(Object results) {
+			int cough = (Integer)getValue("cough");
+			int coughObserved = (Integer)getValue("coughObserved");
+			return cough == coughObserved ? 0 : 200;
+		}
+		
+	}
+	
+	public static void main(String [] args)
+	{
+		int burnin = 100;
+		int samples = 100;
+		int spacing = 10;
+		MyProgram program = new MyProgram();
+		Object [] input = new Object[] {(Integer)1};
+		
+		Object [] results = program.chimplify(burnin, samples, spacing,input,new MyCost()).getResults();
+		
+		int numLC = 0;
+		int numCough = 0;
+		int numCold = 0;
+		
+		for (int i = 0; i < results.length; i++)
+		{
+			Object [] tmp = (Object[])results[i];
+			int lc = (Integer)tmp[0];
+			int cold = (Integer)tmp[1];
+			int cough = (Integer)tmp[2];
+			
+			if (verbose)
+				System.out.println("Cancer: " + lc + " Cold: " + cold + " Cough: " + cough);
+			
+			numLC += lc;
+			numCough += cough;
+			numCold += cold;
+		}
+		
+		if (verbose)
+			System.out.println("LC: " + numLC + " cough: " + numCough + " cold: " + numCold);
+		
+	}
+	
+}
 
 \end{lstlisting}
+
+\fi
 
 \end{itemize}
 
@@ -604,6 +686,7 @@ results = chimplify(@randomcoin,burnin,samples,spacing,{},@costfunction,{sum_val
 res = cell2mat(results);
 hist(res);
  \end{lstlisting}
+ 
  
  \subsection{Monkey dictionary and creating new monkeys}
 

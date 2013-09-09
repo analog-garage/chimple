@@ -14,14 +14,10 @@
 %   limitations under the License.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [out]=costfunction(lg_cancer,coughvalue,cold)
+function [out]=costfunction(lg_cancer,cold,cough)
 
-% first argument is required because it is the output
-%of medical BN.m % second argument lets the user choose 
-%the actual value cough as a parameter
-if getChimpValue('cough') == coughvalue
+if getChimpValue('cough') == getChimpValue('observed_cough');
     out = 0;
 else
     out = 100;
 end
-%addHardChimpConstraint(getChimpValue('cough') ,coughvalue);

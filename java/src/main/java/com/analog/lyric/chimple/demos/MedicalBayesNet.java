@@ -49,6 +49,7 @@ public class MedicalBayesNet
 		public double calculateCost(Object results) {
 			int cough = (Integer)getValue("cough");
 			int coughObserved = (Integer)getValue("coughObserved");
+			
 			return cough == coughObserved ? 0 : 200;
 		}
 		

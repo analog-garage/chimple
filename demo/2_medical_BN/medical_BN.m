@@ -14,13 +14,17 @@
 %   limitations under the License.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [retval]=medical_BN(cough_value)
+function [retval]=medical_BN(observed_cough)
     %defines the probability of lung cancer to be 1%
     lung_cancer = chimpflip('LG' ,0.01);
     %defines the probability of cold cancer to be 20%
     cold=chimpflip ('cold',0.2);
     %cough is present if cold or lung cancer is present
     cough=or(cold, lung_cancer);
+    %save the value of cough
     chimpconst ('cough',cough);
-    retval = {lung_cancer,cough_value,cold};
+    %save the result of the observed cough
+    chimpconst('observed_cough',observed_cough);
+    %return lung cancer, cold, and cough
+    retval = {lung_cancer,cold,cough};
 end
