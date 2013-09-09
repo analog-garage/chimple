@@ -14,6 +14,11 @@
 %   limitations under the License.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+global CHIMPLE_TEST_DEMOS_RUNNING
+if isempty(CHIMPLE_TEST_DEMOS_RUNNING)
+    CHIMPLE_TEST_DEMOS_RUNNING = false;
+end
+
 tic
 
 burnin = 100;
@@ -28,4 +33,7 @@ mat = cell2mat(results);
 both = reshape(mat,2,numel(mat)/2);
 weights = both(1,:);
 numflips = both(2,:);
-hist(weights);
+
+if ~CHIMPLE_TEST_DEMOS_RUNNING
+    hist(weights);
+end

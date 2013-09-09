@@ -1,0 +1,64 @@
+testDimple had errors. 12 of 19 tests passed, 7 failed
+
+===== Test Case Failure =====
+Location: /Users/shershey/git/chimple/matlab/tests/algoChimple/testBeta.m
+Name:     testBeta
+
+/Users/shershey/git/chimple/matlab/tests/algoChimple/testBeta.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/tests/algoChimple/testBeta.m',63)">line 63</a>
+
+No appropriate method, property, or field calculateLikelihood for class com.analog.lyric.chimple.monkeys.ChimpBeta.
+
+
+===== Test Case Failure =====
+Location: /Users/shershey/git/chimple/matlab/tests/algoChimple/testDirichlet.m
+Name:     testDirichlet
+
+/Users/shershey/git/chimple/matlab/tests/algoChimple/testDirichlet.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/tests/algoChimple/testDirichlet.m',80)">line 80</a>
+
+No appropriate method, property, or field calculateLikelihood for class com.analog.lyric.chimple.monkeys.ChimpDirichlet.
+
+
+===== Test Case Failure =====
+Location: /Users/shershey/git/chimple/matlab/tests/algoChimple/testDiscrete.m
+Name:     testDiscrete
+
+/Users/shershey/git/chimple/matlab/tests/algoChimple/testDiscrete.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/tests/algoChimple/testDiscrete.m',57)">line 57</a>
+
+No appropriate method, property, or field calculateLikelihood for class com.analog.lyric.chimple.monkeys.ChimpDiscrete.
+
+
+===== Test Case Failure =====
+Location: /Users/shershey/git/chimple/matlab/tests/algoChimple/testFlip.m
+Name:     testFlip
+
+/Users/shershey/git/chimple/matlab/tests/algoChimple/testFlip.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/tests/algoChimple/testFlip.m',48)">line 48</a>
+
+No appropriate method, property, or field calculateLikelihood for class com.analog.lyric.chimple.monkeys.ChimpFlip.
+
+
+===== Test Case Failure =====
+Location: /Users/shershey/git/chimple/matlab/tests/algoChimple/testPerm.m
+Name:     testPerm
+
+/Users/shershey/git/chimple/matlab/tests/algoChimple/testPerm.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/tests/algoChimple/testPerm.m',48)">line 48</a>
+
+No appropriate method, property, or field calculateLikelihood for class com.analog.lyric.chimple.monkeys.ChimpPerm.
+
+
+===== Test Case Failure =====
+Location: /Users/shershey/git/chimple/matlab/tests/algoChimple/testRand.m
+Name:     testRand
+
+/Users/shershey/git/chimple/matlab/tests/algoChimple/testRand.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/tests/algoChimple/testRand.m',50)">line 50</a>
+
+No appropriate method, property, or field calculateLikelihood for class com.analog.lyric.chimple.monkeys.ChimpRand.
+
+
+===== Test Case Failure =====
+Location: /Users/shershey/git/chimple/matlab/tests/algoChimple/testRandn.m
+Name:     testRandn
+
+/Users/shershey/git/chimple/matlab/tests/algoChimple/testRandn.m at <a href="matlab: opentoline('/Users/shershey/git/chimple/matlab/tests/algoChimple/testRandn.m',61)">line 61</a>
+
+No appropriate method, property, or field calculateLikelihood for class com.analog.lyric.chimple.monkeys.ChimpRandn.
+
