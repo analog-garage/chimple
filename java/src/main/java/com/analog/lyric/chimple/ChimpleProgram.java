@@ -195,6 +195,14 @@ public abstract class ChimpleProgram
 		return _monkeyHandler.getMonkeyByName(name).getValue();
 	}
 	
+	public void addHardConstraint(Object a, Object b)
+	{
+		if (a.equals(b))
+			_monkeyHandler.addCost(0);
+		else
+			_monkeyHandler.addCost(Double.POSITIVE_INFINITY);			
+	}
+	
 	public void addCost(double value)
 	{
 		_monkeyHandler.addCost(value);
