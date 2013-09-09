@@ -24,7 +24,7 @@ function testFlip()
     p = rand();
     successes = 0;
     for i = 1:N
-        tmp = chimpflip('foo',p);
+        tmp = chimpFlip('foo',p);
         successes = successes+tmp;
     end
     assertTrue(abs(p-successes/N) < p*.05);

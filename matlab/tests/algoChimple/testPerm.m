@@ -25,7 +25,7 @@ function testPerm
     %Test gen
     counts = containers.Map();
     for i = 1:M
-        p = chimpperm('foo',N);
+        p = chimpPerm('foo',N);
         key = char(p+'a');
         if counts.isKey(key)
             counts(key) = counts(key)+1;

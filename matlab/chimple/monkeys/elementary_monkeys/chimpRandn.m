@@ -14,7 +14,7 @@
 %   limitations under the License.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function result = chimprandn(name,mu,sigma,sigma_regen)
+function result = chimpRandn(name,mu,sigma,sigma_regen)
       
     if nargin<2
         mu=0;

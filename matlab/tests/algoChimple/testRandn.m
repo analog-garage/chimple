@@ -26,7 +26,7 @@ function testRandn()
     %Test gen
     results = zeros(N,1);
     for i = 1:N
-        results(i) = chimprandn('foo',mu,sigma);
+        results(i) = chimpRandn('foo',mu,sigma);
     end
 
 

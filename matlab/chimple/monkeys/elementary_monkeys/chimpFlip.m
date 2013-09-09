@@ -14,8 +14,12 @@
 %   limitations under the License.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function result = chimpconst(name,value)
+function result = chimpFlip(name,weight)
+     
+    if nargin < 2
+        weight = .5;
+    end
+    
     handler = getMonkeyHandler();
-    result = handler.chimpConst(name,value);
-
+    result = handler.chimpFlip(name,weight);
 end

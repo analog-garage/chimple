@@ -17,13 +17,13 @@
 function result = biasprogram()
 
 
-    S=chimpflip('S');
+    S=chimpFlip('S');
     if S
        X=1;
-       X2=chimprand('X2');
-       X3=chimprand('X3');
-       X4=chimprand('X4');
-       X5=chimprand('X5');
+       X2=chimpRand('X2');
+       X3=chimpRand('X3');
+       X4=chimpRand('X4');
+       X5=chimpRand('X5');
     else
        X=1;
     end

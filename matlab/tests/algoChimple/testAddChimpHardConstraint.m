@@ -25,7 +25,7 @@ function testAddChimpHardConstraint()
 end
 
 function result = myprogram()
-    a = chimpflip('a');
+    a = chimpFlip('a');
     addChimpHardConstraint(a,1);
     result = a;
 end

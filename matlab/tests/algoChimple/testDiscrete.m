@@ -30,7 +30,7 @@ function testDiscrete()
 
     results = zeros(M,1);
     for i = 1:M
-        tmp = chimpdiscrete('foo',probs,alphabet);
+        tmp = chimpDiscrete('foo',probs,alphabet);
         results(i) = tmp-'a'+1;
     end
 

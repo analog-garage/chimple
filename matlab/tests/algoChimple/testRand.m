@@ -23,7 +23,7 @@ function testRand()
     %gen
     results = zeros(N,1);
     for i = 1:N
-        results(i) = chimprand('foo');
+        results(i) = chimpRand('foo');
     end
 
     expectedMean = .5;

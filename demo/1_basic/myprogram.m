@@ -18,11 +18,11 @@ function result = myprogram()
 
     numheads = 0;
 
-    weight = chimprand('weight');
+    weight = chimpRand('weight');
 
     while 1
         name = sprintf('y%d',numheads);
-        yn = chimpflip(name,weight);
+        yn = chimpFlip(name,weight);
         if yn == 0
             break
         end

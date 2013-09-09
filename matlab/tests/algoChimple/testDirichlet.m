@@ -29,7 +29,7 @@ function testDirichlet()
 
     results2 = zeros(N,length(alphas));
     for i = 1:N
-        results2(i,:) = chimpdirichlet('foo',alphas);
+        results2(i,:) = chimpDirichlet('foo',alphas);
     end
 
     means = sum(results)/size(results,1);

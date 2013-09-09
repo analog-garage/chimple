@@ -25,7 +25,7 @@ function testBeta()
     %sigma = 200;
 
     for i = 1:N
-       results(i) = chimpbeta('foo',alpha,beta); 
+       results(i) = chimpBeta('foo',alpha,beta); 
     end
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

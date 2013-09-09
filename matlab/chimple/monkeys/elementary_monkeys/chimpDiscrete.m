@@ -14,21 +14,29 @@
 %   limitations under the License.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function result = chimpdirichlet(name,alphas)
+function result = chimpDiscrete(name,probabilities,sampled_set)
       
+    if nargin < 3
+        sampled_set = 1:length(probabilities);
+    end
     
-    if (nargin<2)||(sum(alphas<0)>0)
-        error('requires a positive input vector alpha')
+    if length(probabilities)~=length(sampled_set)
+        error('The sampled set and probability vector must have identical length');
+    end
+    
+    if isnumeric(sampled_set)
+        sampled_set=num2cell(sampled_set);
+    end
+    
+    if nargin <2
+        error('please provide probabilities');
     end
     
         
-
-    %params=cell(1,1);
-    %params{1}=alphas;
-    
+    %params=cell(3,1);
+    %params{1}=probabilities;
+    %params{2}=sampled_set;
     handler = getMonkeyHandler();
-    
-    result = handler.chimpDirichlet(name,alphas);
-    result = reshape(result,1,numel(result));
-    
+    result = handler.chimpDiscrete(name,probabilities,sampled_set);
+
 end
