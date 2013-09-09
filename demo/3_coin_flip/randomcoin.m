@@ -14,29 +14,17 @@
 %   limitations under the License.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function testDemos()
-    global CHIMPLE_TEST_DEMOS_RUNNING
-    CHIMPLE_TEST_DEMOS_RUNNING = true;
+function [out]=randomcoin(sum_observed)
+ 
+% Generates a random weight for a coin
+    weight=chimpRand('weight');
+    for i=1:20
+      % given an input weight, creates a coin which flips heads with
+      % probability equal to weight
+      X(i)=chimpFlip(sprintf('X%d',i),weight);
+    end
+    out=weight;
+    sumout=sum(X);
+    chimpConst('sumvar',sumout);
+    chimpConst('sum_observed',sum_observed);
     
-    current_pwd = pwd();
-    setChimpleSeed(0);
-    cd('../../../demo/1_basic/');
-    run;
-    assertTrue(mean(weights) > 0.7);
-    cd(current_pwd);
-    
-    setChimpleSeed(0);
-    cd('../../../demo/2_medical_BN/');
-    run
-    cd(current_pwd);
-    assertTrue(all(sum(totals,2) >= 2));
-
-    setChimpleSeed(0);
-    cd('../../../demo/3_coin_flip/');
-    run
-    cd(current_pwd);
-    assertTrue(mean(res) > 0.75);
-
-    
-    CHIMPLE_TEST_DEMOS_RUNNING = false;
-end

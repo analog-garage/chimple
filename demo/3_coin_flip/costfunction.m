@@ -14,29 +14,10 @@
 %   limitations under the License.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function testDemos()
-    global CHIMPLE_TEST_DEMOS_RUNNING
-    CHIMPLE_TEST_DEMOS_RUNNING = true;
-    
-    current_pwd = pwd();
-    setChimpleSeed(0);
-    cd('../../../demo/1_basic/');
-    run;
-    assertTrue(mean(weights) > 0.7);
-    cd(current_pwd);
-    
-    setChimpleSeed(0);
-    cd('../../../demo/2_medical_BN/');
-    run
-    cd(current_pwd);
-    assertTrue(all(sum(totals,2) >= 2));
+function [out]=costfunction(weight )
+% first argument is required because it is the output of medical BN.m 
+% second arugment lets the user choose the actual value cough as a
+sum_observed = getChimpValue('sum_observed');
+sum_var = getChimpValue('sumvar');
 
-    setChimpleSeed(0);
-    cd('../../../demo/3_coin_flip/');
-    run
-    cd(current_pwd);
-    assertTrue(mean(res) > 0.75);
-
-    
-    CHIMPLE_TEST_DEMOS_RUNNING = false;
-end
+out = exp(abs(sum_observed-sum_var));

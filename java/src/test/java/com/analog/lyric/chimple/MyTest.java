@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import com.analog.lyric.chimple.ChimpleProgram.ChimpleResults;
 import com.analog.lyric.chimple.demos.MedicalBayesNet;
+import com.analog.lyric.chimple.demos.RandomCoin;
 
 import static org.junit.Assert.*;
 
@@ -76,6 +77,12 @@ public class MyTest
 		for (int i = 0; i < results.getLogLikelihoods().length; i++)
 			assertTrue(results.getLogLikelihoods()[i] == Math.log(10));
 
+	}
+	
+	@Test
+	public void test_RandomCoin()
+	{
+		assertTrue(RandomCoin.run(false) > 0.75);
 	}
 	
 	@Test

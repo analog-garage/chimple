@@ -14,29 +14,18 @@
 %   limitations under the License.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function testDemos()
-    global CHIMPLE_TEST_DEMOS_RUNNING
-    CHIMPLE_TEST_DEMOS_RUNNING = true;
-    
-    current_pwd = pwd();
-    setChimpleSeed(0);
-    cd('../../../demo/1_basic/');
-    run;
-    assertTrue(mean(weights) > 0.7);
-    cd(current_pwd);
-    
-    setChimpleSeed(0);
-    cd('../../../demo/2_medical_BN/');
-    run
-    cd(current_pwd);
-    assertTrue(all(sum(totals,2) >= 2));
-
-    setChimpleSeed(0);
-    cd('../../../demo/3_coin_flip/');
-    run
-    cd(current_pwd);
-    assertTrue(mean(res) > 0.75);
-
-    
+global CHIMPLE_TEST_DEMOS_RUNNING
+if isempty(CHIMPLE_TEST_DEMOS_RUNNING)
     CHIMPLE_TEST_DEMOS_RUNNING = false;
+end
+
+burnin = 100;
+samples = 100;
+spacing = 5;
+sum_val = 15;
+results = chimplify (@randomcoin , burnin , samples , spacing ,{sum_val} , @costfunction);
+res = cell2mat(results); 
+
+if ~CHIMPLE_TEST_DEMOS_RUNNING
+    hist(res);
 end

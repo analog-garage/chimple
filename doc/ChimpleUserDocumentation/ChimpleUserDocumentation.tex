@@ -57,8 +57,8 @@
 	\else
                 %modify this flag to matlabtrue or javatrue when editing with TexShop
                 %When building from the commandline this will be ignored.
-		\javatrue
-%		\matlabtrue
+		%\javatrue
+		\matlabtrue
 	\fi
 \fi
 
@@ -117,9 +117,9 @@ In Chimple, each new variable has to be explicitly and unambiguously defined, us
 
 In order to do this, the Chimple language has a finite library of atomic random functions which can be combined to construct more complex random functions. These functions are called \textit{monkeys} \footnote{A parallelized MCMC approach to producing the works of Shakespeare might involve a thousand monkeys on a thousand typewriters}, or ERMs (for \textit{elementary random monkeys}).
 
-An example of a monkey is \textbf{chimpflip}. In the absence of an argument, chimpflip returns the outcome of a random coin flip (i.e. 0 or 1 with probability 1/2 each). With a weight argument w, chimpflip returns the outcome of a biased random coin (1 with probability w, 0 with probability 1-w).
+An example of a monkey is \textbf{chimpFlip}. In the absence of an argument, chimpFlip returns the outcome of a random coin flip (i.e. 0 or 1 with probability 1/2 each). With a weight argument w, chimpFlip returns the outcome of a biased random coin (1 with probability w, 0 with probability 1-w).
 
-A second example of an monkey is \textbf{chimprand}, which generates a random number uniformly distributed between 0 and 1.
+A second example of an monkey is \textbf{chimpRand}, which generates a random number uniformly distributed between 0 and 1.
 
 Here are a few examples of building generative models of data.
 
@@ -128,11 +128,11 @@ In this first example, we simply create a randomly biased coin, and flip it 20 t
 \ifmatlab
 \begin{lstlisting}
 % Generates a random weight for a coin
-weight=chimprand('weight');
+weight=chimpRand('weight');
 for i=1:20
   % given an input weight, creates a coin which flips heads with
   % probability equal to weight
-  X(i)=chimpflip(sprintf('X',i),weight);
+  X(i)=chimpFlip(sprintf('X',i),weight);
 end
 \end{lstlisting}
 \fi
@@ -167,9 +167,9 @@ In the second example, we generate two binary random variables, lung\_cancer and
 \ifmatlab
 \begin{lstlisting}
 %defines the probability of lung cancer to be 1%
-lung_cancer=chimpflip('LG',0.01);
+lung_cancer=chimpFlip('LG',0.01);
 %defines the probability of cold to be 20%
-cold=chimpflip('cold',0.2);
+cold=chimpFlip('cold',0.2);
 %cough is present if cold or lung cancer is present
 cough=or(cold, lung_cancer);
 \end{lstlisting}
@@ -207,9 +207,9 @@ Let us continue the medical diagnosis example:
 \ifmatlab
 \begin{lstlisting}
 %defines the probability of lung cancer to be 1%
-lung_cancer=chimpflip('LG',0.01);
+lung_cancer=chimpFlip('LG',0.01);
 %defines the probability of cold cancer to be 20%
-cold=chimpflip('cold',0.2);
+cold=chimpFlip('cold',0.2);
 %cough is present if cold or lung cancer is present
 cough=or(cold, lung_cancer);
 %we observe that the patient is coughing
@@ -306,17 +306,17 @@ Consider the following program:
 
 \ifmatlab
 \begin{lstlisting}
-A=chimpflip('A');
-B1=chimpflip('B1');
+A=chimpFlip('A');
+B1=chimpFlip('B1');
 if A
-     B2=chimpflip('B2');
-     B3=chimpflip('B3');
+     B2=chimpFlip('B2');
+     B3=chimpFlip('B3');
      C=and(and(B1,B2),B3);
 else
-     B4=chimpflip('B4');
+     B4=chimpFlip('B4');
      C=not(B4);
 end
-D= chimpflip('D');
+D= chimpFlip('D');
 \end{lstlisting}
 \fi
 \ifjava
@@ -378,7 +378,7 @@ A Chimple program consists of two parts: a stochastic program, which generates t
 
 The conditioning expression, or data cost, can be included in both the stochastic program, and the meta-program.
 
-\subsubsection{Medical example: chimpflip, naming monkeys, conditioning statements}
+\subsubsection{Medical example: chimpFlip, naming monkeys, conditioning statements}
 
 Recall the following stochastic program:
 
@@ -386,9 +386,9 @@ Recall the following stochastic program:
 \begin{lstlisting}
 function [lung_cancer]=medical_BN()
 %defines the probability of lung cancer to be 1%
-lung_cancer=chimpflip('LG',0.01);
+lung_cancer=chimpFlip('LG',0.01);
 %defines the probability of cold cancer to be 20%
-cold=chimpflip('cold',0.2);
+cold=chimpFlip('cold',0.2);
 %cough is present if cold or lung cancer is present
 cough=or(cold, lung_cancer);
 %we observe that the patient is coughing
@@ -433,7 +433,7 @@ type java_name=erm_name("internal_name",parameters);
 
 where Matlab\_name is optional (in case the monkey is used directly in a computation), and parameters is optional as well (depending on the monkey).
 
-In the case of chimpflip, there is only parameter, the weight of the "coin". If not specified, it defaults to 0.5.
+In the case of chimpFlip, there is only parameter, the weight of the "coin". If not specified, it defaults to 0.5.
 
 The output of a stochastic programs consists of the variables which will be kept (in other words, the sampled variables). While all variables could always be included as part of a global "trace" output for a stochastic program, if the user only cares about the values taken by certain variables, he can safely exclude other "structural" variables. In this case, the user only cares about the occurrence of lung cancer or not.
 
@@ -526,9 +526,9 @@ Armed with the information above, we show how to rewrite the example with the co
 \begin{lstlisting}
 function [retval]=medical_BN(observed_cough)
     %defines the probability of lung cancer to be 1%
-    lung_cancer = chimpflip('LG' ,0.01);
+    lung_cancer = chimpFlip('LG' ,0.01);
     %defines the probability of cold cancer to be 20%
-    cold=chimpflip ('cold',0.2);
+    cold=chimpFlip ('cold',0.2);
     %cough is present if cold or lung cancer is present
     cough=or(cold, lung_cancer);
     %save the value of cough
@@ -656,11 +656,11 @@ public class MedicalBayesNet
 function [out]=randomcoin()
  
 % Generates a random weight for a coin
-weight=chimprand('weight');
+weight=chimpRand('weight');
 for i=1:20
   % given an input weight, creates a coin which flips heads with
   % probability equal to weight
-  X(i)=chimpflip(sprintf('X%d',i),weight);
+  X(i)=chimpFlip(sprintf('X%d',i),weight);
 end
 out=weight;
 sumout=sum(X);
@@ -695,10 +695,10 @@ hist(res);
 \item chimpbeta(alpha,beta,sigma) : creates a beta random variable with parameters (alpha,beta). The optional parameter sigma is used as a parameter for the kernel proposal of the monkey
 \item chimpdirichlet(alphas): create a dirichlet random variable with priors specified by the vector alphas.
 \item chimpdiscrete(probabilities,sampled\_set) samples an element of the set sampled\_set with probabilities specified by the first vector. The sampled\_set is optional and defaulted to the vector counting from 1 to the length of the probability vector.
-\item chimpflip(weight) flips a coin with returns 1 with probability specified by the parameter weight (optional, defaulted to 0.5) .
+\item chimpFlip(weight) flips a coin with returns 1 with probability specified by the parameter weight (optional, defaulted to 0.5) .
 \item chimpperm(n) returns a random permutation over n elements.
-\item chimprand returns a random number between 0 and 1.
-\item chimprandn(mu,sigma,sigma\_f) returns a gaussian distributed random variable (mean mu, std dev sigma). sigma\_f is optional and is used for the proposal kernel. Mean and standard deviation are also both optional, defaulted to 0 and 1 respectively.
+\item chimpRand returns a random number between 0 and 1.
+\item chimpRandn(mu,sigma,sigma\_f) returns a gaussian distributed random variable (mean mu, std dev sigma). sigma\_f is optional and is used for the proposal kernel. Mean and standard deviation are also both optional, defaulted to 0 and 1 respectively.
 \end{enumerate}
 
 \subsubsection{Creating a new monkey}
