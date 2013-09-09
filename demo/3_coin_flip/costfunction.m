@@ -15,8 +15,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [out]=costfunction(weight )
-% first argument is required because it is the output of medical BN.m 
-% second arugment lets the user choose the actual value cough as a
 sum_observed = getChimpValue('sum_observed');
 sum_var = getChimpValue('sumvar');
 

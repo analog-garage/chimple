@@ -57,8 +57,8 @@
 	\else
                 %modify this flag to matlabtrue or javatrue when editing with TexShop
                 %When building from the commandline this will be ignored.
-		%\javatrue
-		\matlabtrue
+		\javatrue
+		%\matlabtrue
 	\fi
 \fi
 
@@ -652,58 +652,133 @@ public class MedicalBayesNet
 
 \subsubsection{Coin-flip example}
 
+\ifmatlab
 \begin{lstlisting}
-function [out]=randomcoin()
+function [out]=randomcoin(sum_observed)
  
 % Generates a random weight for a coin
-weight=chimpRand('weight');
-for i=1:20
-  % given an input weight, creates a coin which flips heads with
-  % probability equal to weight
-  X(i)=chimpFlip(sprintf('X%d',i),weight);
-end
-out=weight;
-sumout=sum(X);
-chimpconst('sumvar',sumout);
-\end{lstlisting}
+    weight=chimpRand('weight');
+    for i=1:20
+      % given an input weight, creates a coin which flips heads with
+      % probability equal to weight
+      X(i)=chimpFlip(sprintf('X%d',i),weight);
+    end
+    out=weight;
+    sumout=sum(X);
+    chimpConst('sumvar',sumout);
+    chimpConst('sum_observed',sum_observed);\end{lstlisting}
 
 \begin{lstlisting}
-function [out]=costfunction(weight,sumvalue)
- 
-% first argument is required because it is the output of medical_BN.m
-% second arugment lets the user choose the actual value cough as a
-% parameter
- 
-addSoftChimpConstraint(getChimpValue('sumvar'),sumvalue,0.01);
+function [out]=costfunction(weight )
+sum_observed = getChimpValue('sum_observed');
+sum_var = getChimpValue('sumvar');
+
+out = exp(abs(sum_observed-sum_var));
+
  \end{lstlisting}
  
  \begin{lstlisting}
- burnin = 100;
-samples = 200;
-spacing = 10;
-sum_val=15;
-results = chimplify(@randomcoin,burnin,samples,spacing,{},@costfunction,{sum_val});
-res = cell2mat(results);
+burnin = 100;
+samples = 100;
+spacing = 5;
+sum_val = 15;
+results = chimplify (@randomcoin , burnin , samples , spacing ,{sum_val} , @costfunction);
+res = cell2mat(results); 
 hist(res);
  \end{lstlisting}
+ \fi
  
+ \ifjava
+ \begin{lstlisting}
+ public class RandomCoin 
+{	
+	public static class RandomCoinProgram extends ChimpleProgram
+	{
+
+		@Override
+		public Object run(Object... args) 
+		{
+
+			//Generates a random weight for a coin
+			double weight = chimpRand("weight");
+			int sumout = 0;
+			int [] flips = new int[20];
+			for (int i = 0; i < 20; i++)
+			{
+				flips[i] = chimpFlip("X" + i,weight);
+				sumout += flips[i];
+			}
+
+			chimpConst("sumvar",sumout);
+			chimpConst("sum_observed",args[0]);
+    
+    		return weight;
+		}
+	
+	}
+	
+
+	public static class CostFunction extends CostBase
+	{
+
+		@Override
+		public double calculateCost(Object result) 
+		{
+			int sum_observed = (Integer)getValue("sum_observed");
+			int sum_var = (Integer)getValue("sumvar");
+
+			return Math.exp(Math.abs(sum_observed-sum_var));
+		}			
+	}
+	
+	public static void main(String [] args)
+	{
+
+		int burnin = 100;
+		int samples = 100;
+		int spacing = 5;
+		int sum_val = 15;
+		RandomCoinProgram program = new RandomCoinProgram();
+		program.setSeed(0);
+		Object [] results = program.chimplify(burnin,samples,spacing,new Object [] {sum_val},new CostFunction()).getResults();
+
+		double average = 0;
+		
+		for (int i = 0; i < results.length; i++)
+		{
+			double result = (Double)results[i];
+			average += result;
+		}
+		
+		average /= results.length;
+		
+		System.out.println(average);
+		
+		return average;
+	}
+	
+}
+
+\end{lstlisting}
+ \fi
  
  \subsection{Monkey dictionary and creating new monkeys}
 
 \subsubsection{Current dictionary of monkeys}
 \begin{enumerate}
-\item chimpbeta(alpha,beta,sigma) : creates a beta random variable with parameters (alpha,beta). The optional parameter sigma is used as a parameter for the kernel proposal of the monkey
-\item chimpdirichlet(alphas): create a dirichlet random variable with priors specified by the vector alphas.
-\item chimpdiscrete(probabilities,sampled\_set) samples an element of the set sampled\_set with probabilities specified by the first vector. The sampled\_set is optional and defaulted to the vector counting from 1 to the length of the probability vector.
-\item chimpFlip(weight) flips a coin with returns 1 with probability specified by the parameter weight (optional, defaulted to 0.5) .
-\item chimpperm(n) returns a random permutation over n elements.
-\item chimpRand returns a random number between 0 and 1.
-\item chimpRandn(mu,sigma,sigma\_f) returns a gaussian distributed random variable (mean mu, std dev sigma). sigma\_f is optional and is used for the proposal kernel. Mean and standard deviation are also both optional, defaulted to 0 and 1 respectively.
+\item chimpBeta(name,alpha,beta,sigma) : creates a beta random variable with parameters (alpha,beta). The optional parameter sigma is used as a parameter for the kernel proposal of the monkey
+\item chimpDirichlet(name,alphas): create a dirichlet random variable with priors specified by the vector alphas.
+\item chimpDiscrete(name,probabilities,sampled\_set) samples an element of the set sampled\_set with probabilities specified by the first vector. The sampled\_set is optional and defaulted to the vector counting from 1 to the length of the probability vector.
+\item chimpFlip(name,weight) flips a coin with returns 1 with probability specified by the parameter weight (optional, defaulted to 0.5) .
+\item chimpPerm(name,n) returns a random permutation over n elements.
+\item chimpRand(name) returns a random number between 0 and 1.
+\item chimpRandn(name,mu,sigma,sigma\_f) returns a gaussian distributed random variable (mean mu, std dev sigma). sigma\_f is optional and is used for the proposal kernel. Mean and standard deviation are also both optional, defaulted to 0 and 1 respectively.
 \end{enumerate}
 
 \subsubsection{Creating a new monkey}
 
-While Chimple?s main monkeys are coded in Java (and the dictionary will keep expanding), it is possible to code one?s own monkey by following a simple procedure:
+\ifmatlab
+While Chimple's main monkeys are coded in Java (and the dictionary will keep expanding), it is possible to code one's own monkey by following a simple procedure:
 
 \begin{enumerate}
 \item In the elementary\_monkey directory, create a new directory with an arbitrary name.
@@ -712,7 +787,7 @@ While Chimple?s main monkeys are coded in Java (and the dictionary will keep exp
 \item  An monkey file, which will call ERM.m
 \item A base generator, erm\_gen.m
 \item A likelihood computing function, erm\_likelihood.m
-\item. A kernel proposal function, erm\_kernel.m
+\item A kernel proposal function, erm\_kernel.m
 \end{enumerate}
 \item The main purpose of ERM.m is to pack all the arguments into a cell array and make the following call:
 \begin{lstlisting}
@@ -722,5 +797,18 @@ runMonkey(@erm_gen,@erm_regen,@chimptemplate_kernel,@chimptemplate_likelihood,na
 \item erm\_kernel must take as input a valid value of the monkey, followed by the list of all parameters, and returns both a new value, and the negative log of the hastings term (see the template for the definition of the hasting terms)
 \item erm\_likelihood must take a value value of the monkey, followed by the list of all parameters, and return the negative log of the likelihood of that value.
 \end{enumerate}
+
+\fi
+
+\ifjava
+It is possible to code one's own monkey by following a simple procedure:
+
+\begin{enumerate}
+\item Create a class that inherits from MonkeyBase
+\item Implement generate, calculateLogLikelihood, and regenerate
+\item add a method to ChimpleProgram chimp<MonkeyName>
+\end{enumerate}
+
+\fi
 
 \end{document}  
