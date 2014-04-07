@@ -1,5 +1,5 @@
 /*******************************************************************************
-*   Copyright 2013 Analog Devices Inc.
+*   Copyright 2013-2014 Analog Devices Inc.
 *
 *   Licensed under the Apache License, Version 2.0 (the "License");
 *   you may not use this file except in compliance with the License.
@@ -15,55 +15,24 @@
 ********************************************************************************/
 
 apply plugin: 'java'
+apply plugin: 'jacoco'
 
 defaultTasks 'build'
 
 //Specify what repositories to use when looking for jars
 repositories {
   mavenCentral()
+  mavenLocal()
+  flatDir dirs: ["../../dimple/solvers/lib"]
 }
-
-//Create a new configuration so that we can refer to all the jar file
-//dependencies later
-configurations {
-  jarfiles
-}
-
-//Create an array of all the dependency jars
-project.ext.myjars = [
-    files('../../dimple/solvers/java/build/libs/dimple.jar'),
-	"net.jcip:jcip-annotations:1.0",
-    "org.apache.commons:commons-math:2.2",
-    "junit:junit:4.10"
-  ]
 
 //Set up all the external dependencies for dimple
 dependencies
 {
-  for (j in project.myjars)
-  {
-    compile(j)
-    jarfiles(j)
-  }
-
-}
-
-//the testAll target descends into dimple to test dimple as well.
-task testDimple(type: GradleBuild) {
-  buildFile = '../../dimple/solvers/java/build.gradle'
-  tasks << 'test'
-}
-
-//the dimpleInternal compile step requires dimple is assembled first.
-task assembleDimple(type: GradleBuild) {
-  buildFile = '../../dimple/solvers/java/build.gradle'
-  tasks << 'assemble'
-}
-
-//clean will descend into dimple and clean it as well.
-task cleanDimple(type: GradleBuild) {
-  buildFile = '../../dimple/solvers/java/build.gradle'
-  tasks << 'clean'
+	compile name: "dimple"
+	compile "net.jcip:jcip-annotations:1.0"
+    compile "org.apache.commons:commons-math:2.2"
+	testCompile "junit:junit:4.11"
 }
 
 //We also provide a task to copy the dimpleInternal jar file to ../lib so that
@@ -82,14 +51,9 @@ clean {
 //subdirectories of the .classpath file.  As a result, we also have
 //to copy all of the jar files into the build/external-libs directory
 task copyExternalJarsForEclipse(type: Copy) {
-  from configurations.jarfiles
+  from configurations.compile
   into(file('build/external-libs'))
 }
-
-
-//Compilation of dimpleInternal requires dimple has been built
-//and jars have been copied to the right locations.
-compileJava.dependsOn assembleDimple
 
 //Copying hte dimple internal jar depends on the jar having been built.
 copyChimpleJar.dependsOn jar
@@ -103,14 +67,3 @@ copyJars.dependsOn copyExternalJarsForEclipse, copyChimpleJar
 //Assemble will ensure all jars have been copied
 assemble.dependsOn copyJars
 
-//Clean will clean Dimple as well
-clean.dependsOn cleanDimple
-
-//The testAll task will ensure that dimple tests run in addition to the 
-//dimpleInternal tests
-task testAll
-
-testAll.dependsOn testDimple, test
-
-//Build will ensure all tests have run.
-build.dependsOn testAll
