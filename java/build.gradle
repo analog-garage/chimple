@@ -21,15 +21,15 @@ defaultTasks 'build'
 
 //Specify what repositories to use when looking for jars
 repositories {
-  mavenCentral()
-  mavenLocal()
   flatDir dirs: ["../../dimple/solvers/lib"]
+  mavenLocal()
+  mavenCentral()
 }
 
 //Set up all the external dependencies for dimple
 dependencies
 {
-	compile name: "dimple"
+	compile "com.analog.lyric.dimple:dimple:+"
 	compile "net.jcip:jcip-annotations:1.0"
     compile "org.apache.commons:commons-math:2.2"
 	testCompile "junit:junit:4.11"
