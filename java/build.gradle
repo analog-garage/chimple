@@ -17,16 +17,21 @@
 apply plugin: 'java'
 apply plugin: 'jacoco'
 
+archivesBaseName = 'chimple'
+
 defaultTasks 'build'
 
 //Specify what repositories to use when looking for jars
 repositories {
-  flatDir dirs: ["../../dimple/solvers/lib"]
+  if (! project.ext.has('jenkins')) {
+    // Do not look in sibling directory for dimple if running in jenkins (see jenkins-init.gradle)
+    flatDir dirs: ["${dimpleSourceRoot}/solvers/lib"]
+  }
   mavenLocal()
   mavenCentral()
 }
 
-//Set up all the external dependencies for dimple
+//Set up all the external dependencies for chimple
 dependencies
 {
 	compile "com.analog.lyric.dimple:dimple:+"
