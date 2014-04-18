@@ -29,7 +29,7 @@ function setupChimple()
     %add java stuff to path
     JavaBuildDir = fullfile(thisDir, '..', 'java', 'build');
     JavaClassDir = fullfile(JavaBuildDir, 'classes', 'main');
-    chimpleJar = fullfile(thisDir, '..', 'lib', 'chimple.jar');
+    chimpleJar = fullfile(thisDir, '..', 'lib', ['chimple-' chimpleVersionNumber() '.jar']);
     if exist(JavaClassDir, 'dir')
         javaaddpath(JavaClassDir);
     elseif exist(chimpleJar)
@@ -52,3 +52,4 @@ function setupChimple()
     addDimpleTestDir(fullfile(thisDir, 'tests'));
     
 end
+
