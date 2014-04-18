@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%   Copyright 2013 Analog Devices, Inc.
+%   Copyright 2013-2014 Analog Devices, Inc.
 %
 %   Licensed under the Apache License, Version 2.0 (the "License");
 %   you may not use this file except in compliance with the License.
@@ -33,10 +33,11 @@ https://github.com/AnalogDevicesLyricLabs/chimple
 2) Make sure gradle is installed:
 http://www.gradle.org/
 
-3) change to chimple/java
+3) cd to dimple root directory and build using gradle:
+shell$ gradle build
 
-4) Execute gradle
-shell$ gradle
+4) cd to chimple root directory and build using gradle:
+shell$ gradle build
 
 Running Chimple from MATLAB
 ===========================
@@ -50,7 +51,7 @@ Running Chimple from MATLAB
 Running Chimple from Java
 ========================
 0) Build Chimple
-1) Add chimple/lib/chimple.jar to javaclasspath.
+1) Add chimple/lib/chimple_v<version>.jar to javaclasspath.
 2) Add all jar files in dimple/solvers/lib to javaclasspath
 3) You can now use chimple from your java program.
 
@@ -58,12 +59,10 @@ Building a Chimple Kit
 ======================
 1) Make sure dimple and chimple are checked out in the same parent directory.
 
-2) Change to the chimple/build directory
+2) cd to the chimple root directory and build using gradle:
+shell$ gradle installkit
 
-3) Execute the following command:
-shell$ python build.py
-
-4) chimple_<version num>.jar should now be in the build directory.
+3) chimple_<version num>.jar should now be in the build directory.
 
 Running Chimple from a kit
 ==========================

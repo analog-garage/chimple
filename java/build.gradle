@@ -14,11 +14,13 @@
 *   limitations under the License.
 ********************************************************************************/
 
+project.description = 'Java API'
+project.version = chimpleVersion 
+
 apply plugin: 'java'
 apply plugin: 'jacoco'
 
 archivesBaseName = 'chimple'
-
 defaultTasks 'build'
 
 //Specify what repositories to use when looking for jars
@@ -34,16 +36,16 @@ repositories {
 //Set up all the external dependencies for chimple
 dependencies
 {
-	compile "com.analog.lyric.dimple:dimple:+"
+	compile "com.analog.lyric.dimple:dimple:0.06+"
 	compile "net.jcip:jcip-annotations:1.0"
-    compile "org.apache.commons:commons-math:2.2"
+  compile "org.apache.commons:commons-math:2.2"
 	testCompile "junit:junit:4.11"
 }
 
 //We also provide a task to copy the dimpleInternal jar file to ../lib so that
 //the build kit and other projects can reference this jar file.
 task copyChimpleJar(type: Copy) {
-  from(file('build/libs/chimple.jar'))
+  from(jar)
   into(file('../lib'))
 }
 
@@ -72,3 +74,34 @@ copyJars.dependsOn copyExternalJarsForEclipse, copyChimpleJar
 //Assemble will ensure all jars have been copied
 assemble.dependsOn copyJars
 
+//
+// javadoc
+//
+
+ext {
+  docSubpackages = 'com.analog.lyric'
+  
+  // Exclude packages that are internal implementation packages or that are not ready for prime time.
+  docExcludePackages = [];
+  docExclude = docExcludePackages.join(':');  
+}
+
+javadoc {
+    exclude docExcludePackages.collect{ '**/' + it.replace('.','/') + '/**' }
+    title 'Chimple Java API ' + chimpleVersion
+  options.header 'Chimple ' + chimpleVersion
+
+}
+
+task (javadocVersion, dependsOn: javadoc, type:Copy) {
+  description = "Copies javadoc into version-specific directory"
+  group = 'Documentation'
+  
+  from javadoc.destinationDir
+  into javadoc.destinationDir.parent + "/javadoc_v${chimpleUnderlineVersion}"
+}
+
+task(allDoc, dependsOn: 'javadocVersion') {
+  description "Builds all documentation"
+  group 'Documentation'
+}

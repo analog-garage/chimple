@@ -1,0 +1,114 @@
+
+// TODO: this was mostly copied from dimple. There should be a way to share a lot of this...
+
+project.description = 'LaTeX user and developer documentation'
+
+ext {
+	dimpleVersion = file('../VERSION').text.trim()
+
+	tmpFilePatterns = ['**.aux', '**.log', '**.out', '**.toc', '**.pdf', '**.dvi']
+
+	userDocName = 'ChimpleUserDocumentation'
+	userDocDir = file(userDocName)
+	userDocSource = new File(userDocDir, userDocName + '.tex')
+	userDocGeneratedPdf = "${userDocDir}/${userDocName}.pdf"
+	userDocJavaPdf = makePdfName(userDocName, 'java')
+	userDocMatlabPdf = makePdfName(userDocName, 'matlab')
+}
+
+task(clean, type: Delete) {
+	description 'Deletes temporary files'
+	group 'Cleanup'
+	
+	delete fileTree(dir:userDocDir, includes:tmpFilePatterns)
+}
+
+task(reallyClean, type: Delete) {
+	description 'Deletes all generated files'
+	group 'Cleanup'
+	
+	delete fileTree(dir:projectDir, includes:tmpFilePatterns)
+}
+
+task(javaUserDoc) {
+	description 'Builds Java user documentation'
+	group 'Documentation'
+	
+	inputs.files fileTree(dir:userDocDir, excludes:tmpFilePatterns)
+	outputs.files userDocJavaPdf
+
+	doLast {
+		generatePDF(userDocSource, dimpleVersion, 'java')
+		copy {
+			from file(userDocGeneratedPdf)
+			into file ('.')
+			rename("${userDocName}.pdf", userDocJavaPdf)
+		}
+	}
+}
+
+task(matlabUserDoc) {
+	description 'Builds Java user documentation'
+	group 'Documentation'
+	
+	inputs.files fileTree(dir:userDocDir, excludes:tmpFilePatterns)
+	outputs.files userDocMatlabPdf
+
+	doLast {
+		generatePDF(userDocSource, dimpleVersion, 'matlab')
+		copy {
+			from file(userDocGeneratedPdf)
+			into file ('.')
+			rename("${userDocName}.pdf", userDocMatlabPdf)
+		}
+	}
+}
+
+task(userDocs, dependsOn: ['matlabUserDoc', 'javaUserDoc']) {
+	description 'Builds all user documentation'
+	group 'Documentation'
+}
+
+task(allDoc, dependsOn: ['userDocs']) {
+	description 'Builds all documentation'
+	group 'Documentation'
+}
+
+//
+// Helper functions
+//
+
+String makePdfName(String basename, String flag)
+{
+	if (flag == null)
+	{
+		return "${basename}_v${chimpleVersion}.pdf"
+	}
+	else if (flag == "java")
+	{
+		return "${basename}_v${chimpleVersion}_Java_API.pdf"
+	}
+	else if (flag == "matlab")
+	{
+		return "${basename}_v${chimpleVersion}_MATLAB_API.pdf"
+	}
+
+	return null
+}
+
+void generatePDF(File sourceFile) {
+	generatePDF(sourceFile.parent, sourceFile.name)
+}
+
+void generatePDF(File sourceFile, String version, String apiLanguage) {
+	String basename = sourceFile.name
+	generatePDF(sourceFile.parent,
+			"\\def\\version{${chimpleVersion}}\\input{\\def\\for${apiLanguage}{}\\input{${basename}}}")
+}
+
+void generatePDF(String dir, String latexCommands)
+{
+	3.times {
+		ant.exec(executable: 'pdflatex', dir: dir, failonerror: true) { arg(value: latexCommands) }
+	}
+}

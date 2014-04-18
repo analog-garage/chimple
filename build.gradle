@@ -14,8 +14,97 @@
  *   limitations under the License.
  ********************************************************************************/
 
-task foo 
+// TODO: much of this was copied from dimple, it would be nice if it could be shared somehow...
 
 ext {
+	chimpleVersionFile = file('VERSION')
+	chimpleVersion = chimpleVersionFile.text.trim()
+	chimpleUnderlineVersion = chimpleVersion.replace('.','_')
+
+	chimpleInstallkitDir = file('build/')
+	chimpleInstallkitName = "chimple_v${chimpleUnderlineVersion}.zip"
+	chimpleInstallkitFile = new File(chimpleInstallkitDir, chimpleInstallkitName)
+	chimpleUnzippedInstallkit = new File(chimpleInstallkitDir, 'installkit')
+
 	dimpleSourceRoot = file('../dimple')
+}
+
+task installkit(type: Zip) {
+	description = 'Build Chimple install kit'
+	group = 'Build'
+
+	dependsOn(':java:assemble', ':java:javadoc', ':doc:userDocs')
+	destinationDir = chimpleInstallkitDir
+	archiveName = chimpleInstallkitName
+
+	from ('demo/') {
+		into 'demo/'
+	}
+
+	from ('doc/') {
+		include 'ReleaseNotes/**'
+		include "ChimpleUserDocumentation_v${chimpleVersion}*.pdf"
+		include "javadoc/**"
+		into 'doc/'
+	}
+
+	from ('matlab/') {
+		include '**/*.m'
+		into 'matlab/'
+	}
+
+	from ('lib/') {
+		include '*.jar'
+		into 'lib'
+	}
+
+	from ('.') {
+		include 'LICENSE.txt'
+		include 'VERSION'
+		include 'NOTICE.txt'
+		include 'README.txt'
+		include 'startup.m'
+	}
+}
+
+task cleanInstallkit(type: Delete) {
+	description = 'Remove install kits'
+	group = 'Cleanup'
+
+	delete fileTree(dir: chimpleInstallkitDir, includes:['chimple_v*.zip'])
+}
+
+task testInstallkitSetup(dependsOn: installkit, type: Copy) {
+	from zipTree(chimpleInstallkitFile)
+	into chimpleUnzippedInstallkit
+}
+
+task testInstallkitClean(type: Delete) {
+	delete chimpleUnzippedInstallkit
+}
+
+task testInstallkit(dependsOn: [testInstallkitSetup, ':java:testClasses'], type:Test) {
+	description = 'Runs tests against install kit'
+	group = 'Verification'
+
+	evaluationDependsOn ':java'
+	def javaProject = project(':java')
+    def testSet = javaProject.sourceSets.test
+
+    // show standard out and standard error of the test JVM(s) on the console
+    testLogging.showStandardStreams = true
+
+ 	testClassesDir = testSet.output.classesDir
+ 	testSrcDirs = testSet.java.srcDirs.asList()
+
+ 	classpath = files(testClassesDir, 
+ 		fileTree(dir: chimpleUnzippedInstallkit, includes:['**/*.jar']),
+ 		javaProject.configurations.compile,
+ 		javaProject.configurations.testCompile)
+
+	reports.html.enabled = false
+	reports.junitXml.enabled = false
+	binResultsDir = new File(chimpleUnzippedInstallkit, "installtestOutput") // FIXME
+
+	finalizedBy testInstallkitClean
 }
