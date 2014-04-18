@@ -1,1 +1,1 @@
-include 'java', 'doc'
+include 'java', 'doc', 'matlab'

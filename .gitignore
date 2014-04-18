@@ -2,6 +2,6 @@ lib
 testDimpleexitDone.txt
 *~
 testDimple.failures.txt
-ChimpleUserDocumentation.synctex.gz
 .gradle
 jenkins
+testMatlab.log
