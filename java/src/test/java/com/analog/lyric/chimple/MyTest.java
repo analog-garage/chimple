@@ -17,15 +17,15 @@
 package com.analog.lyric.chimple;
 
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 import com.analog.lyric.chimple.ChimpleProgram.ChimpleResults;
 import com.analog.lyric.chimple.demos.MedicalBayesNet;
 import com.analog.lyric.chimple.demos.RandomCoin;
 
-import static org.junit.Assert.*;
-
-public class MyTest 
+public class MyTest
 {
 	
 	/*
@@ -33,7 +33,7 @@ public class MyTest
 	 * calculation is correct.
 	 */
 	@Test
-	public void test_bias() 
+	public void test_bias()
 	{
 		
 		int burnin = 1000;
@@ -63,7 +63,7 @@ public class MyTest
 	}
 	
 	@Test
-	public void test_externalCost() 
+	public void test_externalCost()
 	{
 
 		int burnin = 100;
@@ -90,10 +90,6 @@ public class MyTest
 	{
 		Object [] results = MedicalBayesNet.run(false);
 		
-		int total_cancer = 0;
-		int total_cold = 0;
-		int total_cough = 0;
-		
 		for (int i = 0; i < results.length; i++)
 		{
 			Object [] result = (Object[])results[i];
@@ -107,7 +103,7 @@ public class MyTest
 	}
 	
 	@Test
-	public void test_seed() 
+	public void test_seed()
 	{
 		int burnin = 100;
 		int samples = 100;
